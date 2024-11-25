@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../../firebase';
 import Swal from 'sweetalert2';
+import { db } from '../../firebase';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const Tour = () => {
-  const [title, setTitle] = useState('');
+  const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [tours, setTours] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editTourId, setEditTourId] = useState(null);
+  const navigate = useNavigate(); // Khai báo useNavigate
 
-  // Fetch tours from Firestore
   const fetchTours = async () => {
     const toursCollection = collection(db, 'tours');
     const toursSnapshot = await getDocs(toursCollection);
@@ -29,65 +31,60 @@ const Tour = () => {
     e.preventDefault();
 
     const tour = {
-      title,
+      name,
       description,
-      price: parseFloat(price), // Convert price to a number
+      price: parseFloat(price),
+      imageUrl,
     };
 
     try {
       if (editTourId) {
-        // Update tour if editTourId is set
         const tourRef = doc(db, 'tours', editTourId);
         await updateDoc(tourRef, tour);
-        Swal.fire('Success', 'Tour updated successfully!', 'success');
+        Swal.fire('Thành công', 'Đã cập nhật tour!', 'success');
       } else {
-        // Add new tour
         await addDoc(collection(db, 'tours'), tour);
-        Swal.fire('Success', 'Tour added successfully!', 'success');
+        Swal.fire('Thành công', 'Đã thêm tour!', 'success');
       }
 
-      // Reset form fields
-      setTitle('');
+      // Reset trạng thái sau khi thêm hoặc cập nhật
+      setName('');
       setDescription('');
       setPrice('');
-      fetchTours(); // Refresh the list of tours
+      setImageUrl('');
+      fetchTours();
       setIsModalOpen(false);
-      setEditTourId(null); // Reset edit ID
+      setEditTourId(null);
     } catch (error) {
-      console.error("Error adding/updating document: ", error);
-      Swal.fire('Error', 'Failed to add or update tour.', 'error');
+      console.error("Lỗi khi thêm/cập nhật tài liệu: ", error);
+      Swal.fire('Lỗi', 'Không thể thêm hoặc cập nhật tour.', 'error');
     }
   };
 
   const handleEdit = (tour) => {
-    setTitle(tour.title);
+    setName(tour.name);
     setDescription(tour.description);
     setPrice(tour.price);
+    setImageUrl(tour.imageUrl);
     setEditTourId(tour.id);
-    setIsModalOpen(true); // Open modal for editing
+    setIsModalOpen(true);
   };
 
   const handleDelete = async (id) => {
     const result = await Swal.fire({
-      title: 'Are you sure you want to delete this tour?',
-      text: "This action cannot be undone!",
+      title: 'Bạn có chắc chắn muốn xóa tour này không?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Delete',
-      cancelButtonText: 'Cancel',
     });
 
     if (result.isConfirmed) {
       try {
         const tourRef = doc(db, 'tours', id);
         await deleteDoc(tourRef);
-        Swal.fire('Deleted!', 'Tour has been deleted.', 'success');
-        fetchTours(); // Refresh list after deletion
+        Swal.fire('Đã xóa!', 'Tour đã được xóa.', 'success');
+        fetchTours();
       } catch (error) {
-        console.error("Error deleting document: ", error);
-        Swal.fire('Error', 'Failed to delete tour.', 'error');
+        Swal.fire('Lỗi', 'Không thể xóa tour.', 'error');
       }
     }
   };
@@ -97,88 +94,109 @@ const Tour = () => {
   }
 
   return (
-    <div className="p-5">
-      <h1 className="text-2xl font-bold mb-5">Tour Management</h1>
+    <div className="flex flex-col min-h-screen">
+      <main className="p-5 flex-grow">
+        <h1 className="text-2xl font-bold mb-5">Quản Lý Tour</h1>
 
-      <button 
-        className="bg-blue-500 text-white px-4 py-2 rounded mb-5"
-        onClick={() => {
-          setIsModalOpen(true);
-          setEditTourId(null); // Reset edit ID when opening modal
-        }}
-      >
-        Add Tour
-      </button>
+        {/* Nút Quay lại */}
+        <button 
+          onClick={() => navigate(-1)} 
+          className="bg-gray-500 text-white px-4 py-2 rounded mb-5"
+        >
+          Quay lại
+        </button>
 
-      {/* Modal for adding/editing tour */}
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="fixed inset-0 bg-black opacity-50" onClick={() => setIsModalOpen(false)}></div>
-          <div className="bg-white rounded-lg p-6 z-10 w-96">
-            <h2 className="text-xl font-bold mb-4">{editTourId ? "Edit Tour" : "Add Tour"}</h2>
-            <form onSubmit={handleSubmit}>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Tour Title"
-                required
-                className="border border-gray-300 p-2 w-full mb-4 rounded"
-              />
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Description"
-                required
-                className="border border-gray-300 p-2 w-full mb-4 rounded"
-              />
-              <input
-                type="number"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                placeholder="Price"
-                required
-                className="border border-gray-300 p-2 w-full mb-4 rounded"
-              />
-              <div className="flex justify-between">
-                <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
-                  {editTourId ? "Update" : "Add"}
-                </button>
-                <button type="button" onClick={() => setIsModalOpen(false)} className="bg-red-500 text-white px-4 py-2 rounded">
-                  Close
-                </button>
-              </div>
-            </form>
+        <button 
+          className="bg-blue-500 text-white px-4 py-2 rounded mb-5"
+          onClick={() => {
+            setIsModalOpen(true);
+            setEditTourId(null);
+          }}
+        >
+          Thêm Tour
+        </button>
+
+        {isModalOpen && (
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="fixed inset-0 bg-black opacity-50" onClick={() => setIsModalOpen(false)}></div>
+            <div className="bg-white rounded-lg p-6 z-10 w-96">
+              <h2 className="text-xl font-bold mb-4">{editTourId ? "Sửa Tour" : "Thêm Tour"}</h2>
+              <form onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Tên tour"
+                  required
+                  className="border border-gray-300 p-2 w-full mb-4 rounded"
+                />
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Mô tả"
+                  required
+                  className="border border-gray-300 p-2 w-full mb-4 rounded"
+                />
+                <input
+                  type="number"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  placeholder="Giá"
+                  required
+                  className="border border-gray-300 p-2 w-full mb-4 rounded"
+                  min="0"
+                />
+                <input
+                  type="text"
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  placeholder="URL hình ảnh"
+                  required={!editTourId} // Yêu cầu URL hình ảnh cho tour mới
+                  className="border border-gray-300 p-2 w-full mb-4 rounded"
+                />
+                <div className="flex justify-between">
+                  <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
+                    {editTourId ? "Cập Nhật" : "Thêm"}
+                  </button>
+                  <button type="button" onClick={() => setIsModalOpen(false)} className="bg-red-500 text-white px-4 py-2 rounded">
+                    Đóng
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <h2 className="text-xl font-semibold mt-10 mb-4">Tour List</h2>
-      
-      {/* Table for displaying tours */}
-      <table className="min-w-full bg-white border border-gray-300">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="py-2 px-4 border-b text-left">Title</th>
-            <th className="py-2 px-4 border-b text-left">Description</th>
-            <th className="py-2 px-4 border-b text-left">Price</th>
-            <th className="py-2 px-4 border-b text-left">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tours.map((tour) => (
-            <tr key={tour.id} className="hover:bg-gray-100">
-              <td className="py-2 px-4 border-b">{tour.title}</td>
-              <td className="py-2 px-4 border-b">{tour.description}</td>
-              <td className="py-2 px-4 border-b">{tour.price} VND</td>
-              <td className="py-2 px-4 border-b">
-                <button onClick={() => handleEdit(tour)} className="bg-yellow-500 text-white px-2 py-1 rounded mr-2">Edit</button>
-                <button onClick={() => handleDelete(tour.id)} className="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
-              </td>
+        <h2 className="text-xl font-semibold mt-10 mb-4">Danh Sách Tour</h2>
+
+        <table className="min-w-full bg-white border border-gray-300">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="py-2 px-4 border-b text-left">Tên</th>
+              <th className="py-2 px-4 border-b text-left">Mô Tả</th>
+              <th className="py-2 px-4 border-b text-left">Giá</th>
+              <th className="py-2 px-4 border-b text-left">Hình Ảnh</th>
+              <th className="py-2 px-4 border-b text-left">Hành Động</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {tours.map((tour) => (
+              <tr key={tour.id} className="hover:bg-gray-100">
+                <td className="py-2 px-4 border-b">{tour.name}</td>
+                <td className="py-2 px-4 border-b">{tour.description}</td>
+                <td className="py-2 px-4 border-b">{tour.price} VND</td>
+                <td className="py-2 px-4 border-b">
+                  {tour.imageUrl && <img src={tour.imageUrl} alt={tour.name} className="w-16 h-16 object-cover" />}
+                </td>
+                <td className="py-2 px-4 border-b">
+                  <button onClick={() => handleEdit(tour)} className="bg-yellow-500 text-white px-2 py-1 rounded mr-2">Sửa</button>
+                  <button onClick={() => handleDelete(tour.id)} className="bg-red-500 text-white px-2 py-1 rounded">Xóa</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </main>
     </div>
   );
 };

@@ -1,8 +1,7 @@
 import { auth } from '../../firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc, getDoc} from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
-
 
 // Đăng nhập
 export const login = async (email, password) => {
@@ -29,11 +28,14 @@ export const register = async (username, email, password) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
+    // Xác định role dựa trên email
+    const role = email === 'admin@gmail.com' ? 'admin' : 'user';
+
     // Lưu thông tin người dùng và role vào Firestore
     await setDoc(doc(db, 'users', user.uid), {
       username,
       email,
-      role: 'user', // Đặt role mặc định là "user"
+      role,
     });
 
     return { success: true, data: user }; // Trả về thông tin người dùng

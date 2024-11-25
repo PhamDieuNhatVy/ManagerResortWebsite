@@ -1,36 +1,37 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { TextField, Button, Typography, Grid, Container, Alert } from '@mui/material';
-import { useLogin } from './services/Auth';
+import { useAuth } from '../context/AuthContext'; // Import useAuth
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState(''); // State để lưu thông báo lỗi
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
-  const login = useLogin();
+  const { login } = useAuth(); // Lấy hàm login từ context
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setErrorMessage(''); // Reset thông báo lỗi trước khi gọi login
+    setErrorMessage('');
 
     try {
-      const response = await login(email, password);
-      if (response.success) {
-        navigate('/'); // Chuyển hướng về trang Home sau khi đăng nhập
+      // Gọi hàm login từ context
+      const userData = await login(email, password);
+
+      // Điều hướng dựa trên vai trò
+      if (userData.role === 'admin') {
+        navigate('/admin'); // Điều hướng đến trang admin
       } else {
-        throw new Error(response.error || 'Đăng nhập không thành công.'); // Ném lỗi nếu không thành công
+        navigate('/'); // Điều hướng đến trang chính cho user thông thường
       }
     } catch (error) {
-      // Xử lý lỗi từ Firebase
+      // Xử lý các lỗi khi đăng nhập
       if (error.code === 'auth/invalid-email') {
         setErrorMessage('Email không hợp lệ.');
       } else if (error.code === 'auth/user-not-found') {
         setErrorMessage('Không tìm thấy tài khoản với email này.');
       } else if (error.code === 'auth/wrong-password') {
         setErrorMessage('Mật khẩu không đúng.');
-      } else if (error.code === 'auth/invalid-credential') {
-        setErrorMessage('Thông tin đăng nhập không hợp lệ. Vui lòng kiểm tra lại.');
       } else {
         setErrorMessage('Đăng nhập không thành công. Vui lòng thử lại sau.');
       }
@@ -39,11 +40,20 @@ const LoginForm = () => {
   };
 
   return (
-    <Container maxWidth="xs" sx={{ mt: 8 }}>
+    <Container
+      component="main"
+      maxWidth="xs"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        justifyContent: 'center',
+      }}
+    >
       <Typography variant="h4" align="center" gutterBottom>
         Đăng nhập
       </Typography>
-      {errorMessage && ( // Hiển thị thông báo lỗi nếu có
+      {errorMessage && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {errorMessage}
         </Alert>
@@ -51,7 +61,7 @@ const LoginForm = () => {
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <TextField 
+            <TextField
               fullWidth
               label="Email"
               type="email"
@@ -61,7 +71,7 @@ const LoginForm = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField 
+            <TextField
               fullWidth
               label="Mật khẩu"
               type="password"
@@ -76,7 +86,7 @@ const LoginForm = () => {
             </Button>
           </Grid>
           <Grid item xs={12}>
-            <Link to="/register" variant="body2" className='link'>
+            <Link to="/register" variant="body2" className="link">
               Bạn chưa có tài khoản? Đăng ký
             </Link>
           </Grid>

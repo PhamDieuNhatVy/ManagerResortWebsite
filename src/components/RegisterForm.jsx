@@ -1,14 +1,6 @@
-// src/components/RegisterForm.js
 import React, { useState } from 'react';
-import { useNavigate, Link  } from 'react-router-dom';
-import { 
-  TextField, 
-  Button, 
-  Typography, 
-  Grid, 
-  Container, 
- 
-} from '@mui/material';
+import { useNavigate, Link } from 'react-router-dom';
+import { TextField, Button, Typography, Grid, Container } from '@mui/material';
 import { useRegister } from './services/Auth';
 
 
@@ -30,14 +22,14 @@ const RegisterForm = () => {
   };
 
   return (
-    <Container maxWidth="xs" sx={{ mt: 8 }}>
+    <Container component="main" maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', justifyContent: 'center' }}>
       <Typography variant="h4" align="center" gutterBottom>
         Đăng ký
       </Typography>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <TextField 
+            <TextField
               fullWidth
               label="Tên người dùng"
               value={username}
@@ -46,7 +38,7 @@ const RegisterForm = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField 
+            <TextField
               fullWidth
               label="Email"
               type="email"
@@ -56,7 +48,7 @@ const RegisterForm = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField 
+            <TextField
               fullWidth
               label="Mật khẩu"
               type="password"
@@ -77,9 +69,9 @@ const RegisterForm = () => {
           </Grid>
         </Grid>
       </form>
+    
     </Container>
   );
 };
 
 export default RegisterForm;
-

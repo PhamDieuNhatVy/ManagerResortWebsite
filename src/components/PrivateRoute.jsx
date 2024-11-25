@@ -1,23 +1,21 @@
 import React from 'react';
-import { Link, Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // Hoặc đường dẫn tới AuthContext bạn đã tạo
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'; // Hook để lấy thông tin người dùng từ context
 
 const PrivateRoute = ({ children, allowedRoles }) => {
-  const { user, loading } = useAuth(); // Lấy thông tin user và trạng thái loading từ context
+  const { user } = useAuth();  // Lấy thông tin người dùng từ context AuthContext
 
-  // Nếu đang tải, có thể hiển thị spinner hoặc thông báo
-//   if (loading) {
-//     return(
-//         <h1>hhhh</h1>
-//     )  // Hoặc một spinner
-//   }
-
-  // Nếu user chưa đăng nhập hoặc role không phù hợp, chuyển hướng tới trang login
-  if (!user || !user.role || !allowedRoles.includes(user.role)) {
-    return <Link to="/login" />;
+  // Kiểm tra xem người dùng đã đăng nhập chưa
+  if (!user) {
+    return <Navigate to="/login" replace />;  // Nếu chưa đăng nhập, chuyển hướng đến trang login
   }
 
-  // Nếu có quyền, hiển thị nội dung con (children)
+  // Kiểm tra quyền truy cập của người dùng (nếu có)
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/unauthorized" replace />;  // Nếu vai trò người dùng không hợp lệ, chuyển hướng đến trang unauthorized
+  }
+
+  // Nếu người dùng đã đăng nhập và có quyền truy cập hợp lệ, render children (các route hoặc component được bảo vệ)
   return children;
 };
 
