@@ -6,6 +6,7 @@ import { useCart } from '../context/CartContext'; // Import CartContext
 import { db } from '../firebase'; // Firebase configuration
 import { collection, addDoc } from 'firebase/firestore';
 
+
 const CheckoutPage = () => {
   const { user } = useAuth(); // Lấy thông tin người dùng
   const { cart, clearCart } = useCart(); // Lấy giỏ hàng từ CartContext
@@ -55,94 +56,98 @@ const CheckoutPage = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 8 }}>
-      <Typography variant="h4" gutterBottom>
-        Thanh toán
-      </Typography>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Container maxWidth="lg" sx={{ mt: 8, flexGrow: 1 }}>
+        <Typography variant="h4" gutterBottom>
+          Đặt Ngay
+        </Typography>
 
-      {paymentSuccess && (
-        <Alert severity="success" sx={{ mb: 2 }}>
-          Thanh toán thành công! Cảm ơn bạn đã mua hàng.
-        </Alert>
-      )}
+        {paymentSuccess && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            Đặt hàng thành công! Cảm ơn bạn đã ủng hộ.
+          </Alert>
+        )}
 
-      {errorMessage && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {errorMessage}
-        </Alert>
-      )}
+        {errorMessage && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {errorMessage}
+          </Alert>
+        )}
 
-      <Grid container spacing={4}>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="h5">Chi tiết đơn hàng</Typography>
-          {cart.length === 0 ? (
-            <Typography variant="h6">Giỏ hàng của bạn hiện đang trống.</Typography>
-          ) : (
-            <Grid container spacing={2}>
-              {cart.map((item) => (
-                <Grid item xs={12} key={item.id}>
-                  <Card sx={{ display: 'flex', alignItems: 'center' }}>
-                    <CardContent sx={{ flex: 1 }}>
-                      <Typography variant="h6">{item.name}</Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {item.description}
-                      </Typography>
-                      <Typography variant="body1" color="text.primary">
-                        {item.price} VND
-                      </Typography>
-                    </CardContent>
-                  </Card>
+        <Grid container spacing={4}>
+          <Grid item xs={12} sm={6}>
+            <Typography variant="h5">Chi tiết đơn hàng</Typography>
+            {cart.length === 0 ? (
+              <Typography variant="h6">Giỏ hàng của bạn hiện đang trống.</Typography>
+            ) : (
+              <Grid container spacing={2}>
+                {cart.map((item) => (
+                  <Grid item xs={12} key={item.id}>
+                    <Card sx={{ display: 'flex', alignItems: 'center' }}>
+                      <CardContent sx={{ flex: 1 }}>
+                        <Typography variant="h6">{item.name}</Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {item.description}
+                        </Typography>
+                        <Typography variant="body1" color="text.primary">
+                          {item.price} VND
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+                <Grid item xs={12}>
+                  <Typography variant="h6" sx={{ mt: 2 }}>
+                    Tổng cộng: {cart.reduce((total, item) => total + item.price, 0)} VND
+                  </Typography>
                 </Grid>
-              ))}
-              <Grid item xs={12}>
-                <Typography variant="h6" sx={{ mt: 2 }}>
-                  Tổng cộng: {cart.reduce((total, item) => total + item.price, 0)} VND
-                </Typography>
               </Grid>
-            </Grid>
-          )}
-        </Grid>
+            )}
+          </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <Typography variant="h5">Thông tin giao hàng</Typography>
-          <TextField
-            label="Họ và tên"
-            fullWidth
-            variant="outlined"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            label="Địa chỉ"
-            fullWidth
-            variant="outlined"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            label="Số điện thoại"
-            fullWidth
-            variant="outlined"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-          <Box sx={{ mt: 2 }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handlePayment}
+          <Grid item xs={12} sm={6}>
+            <Typography variant="h5">Thông tin giao hàng</Typography>
+            <TextField
+              label="Họ và tên"
               fullWidth
-              disabled={loading}
-            >
-              {loading ? 'Đang xử lý...' : 'Thanh toán'}
-            </Button>
-          </Box>
+              variant="outlined"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Địa chỉ"
+              fullWidth
+              variant="outlined"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Số điện thoại"
+              fullWidth
+              variant="outlined"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <Box sx={{ mt: 2 }}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handlePayment}
+                fullWidth
+                disabled={loading}
+              >
+                {loading ? 'Đang xử lý...' : 'Đặt ngay'}
+              </Button>
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </Container>
+      </Container>
+
+  
+    </Box>
   );
 };
 

@@ -70,7 +70,7 @@ const CartPage = () => {
               onClick={handleCheckout}
               sx={{ width: '200px', padding: '16px' }}
             >
-              Thanh toán
+              Đặt Ngay
             </Button>
           </Box>
         )}

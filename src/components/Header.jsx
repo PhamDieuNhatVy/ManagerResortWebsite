@@ -17,30 +17,46 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="flex items-center p-4 bg-white shadow sticky top-0 z-50">
-      <Link to="/" className="flex items-center text-black">
-        <img src={logo} alt="Logo" className="w-12 h-12 mr-2" />
-        <h1 className="font-bold text-xl">Mrs. Hang Farm</h1>
-      </Link>
+    <header className="navbar navbar-expand-lg navbar-light bg-light shadow-sm sticky-top">
+      <div className="container">
+        <Link to="/" className="navbar-brand d-flex align-items-center">
+          <img src={logo} alt="Logo" className="w-12 h-12 mr-2" />
+          <h1 className="font-weight-bold text-dark">Mrs. Hang Farm</h1>
+        </Link>
 
-      <nav className="ml-auto flex space-x-4">
-        <Link to="/" className="hover:underline font-bold uppercase py-2">Trang chủ</Link>
-        <Link to="/about" className="hover:underline font-bold uppercase py-2">Giới thiệu</Link>
-        <Link to="/contact" className="hover:underline font-bold uppercase py-2">Liên hệ</Link>
+        <nav className="ml-auto">
+          <ul className="navbar-nav d-flex">
+            <li className="nav-item">
+              <Link to="/" className="nav-link font-weight-bold text-uppercase py-2">Trang chủ</Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/about" className="nav-link font-weight-bold text-uppercase py-2">Giới thiệu</Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/contact" className="nav-link font-weight-bold text-uppercase py-2">Liên hệ</Link>
+            </li>
 
-        {user ? (
-          <>
-            <span className="py-2">{user.email}</span>
-            <Link to="/logout" className="hover:underline font-bold uppercase py-2">Đăng xuất</Link>
-          </>
-        ) : (
-          <Link to="/login">
-            <button className="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 uppercase">
-              Đăng nhập
-            </button>
-          </Link>
-        )}
-      </nav>
+            {user ? (
+              <>
+                <li className="nav-item">
+                  <span className="nav-link py-2">{user.email}</span>
+                </li>
+                <li className="nav-item">
+                  <Link to="/logout" className="nav-link font-weight-bold text-uppercase py-2">Đăng xuất</Link>
+                </li>
+              </>
+            ) : (
+              <li className="nav-item">
+                <Link to="/login">
+                  <button className="btn btn-danger text-white font-weight-bold py-2 px-4 rounded-pill hover:bg-green-600">
+                    Đăng nhập
+                  </button>
+                </Link>
+              </li>
+            )}
+          </ul>
+        </nav>
+      </div>
     </header>
   );
 };
