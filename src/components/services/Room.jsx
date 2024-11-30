@@ -95,7 +95,7 @@ const Room = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <main className="p-5 flex-grow">
+      <main className="p-2 flex-grow">
         <h1 className="text-2xl font-bold mb-5">Quản Lý Phòng</h1>
 
         {/* Nút Quay lại */}

@@ -100,8 +100,8 @@ const Food = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <main className="p-5 flex-grow">
+    <div className="flex min-h-screen">
+      <main className="p-1 flex-grow">
         <h1 className="text-2xl font-bold mb-5">Quản Lý Thực Phẩm</h1>
 
         {/* Nút Quay lại */}

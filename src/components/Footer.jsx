@@ -1,11 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin } from 'react-icons/fa';
+import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin, FaArrowUp } from 'react-icons/fa';
 
 const Footer = () => {
+  const [showTopButton, setShowTopButton] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowTopButton(true);
+      } else {
+        setShowTopButton(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <footer className="bg-white text-gray-700 pt-4">
-      <div className="container mx-auto px-10  justify-around">
+      <div className="container mx-auto px-10 justify-around">
         <div className="flex flex-wrap justify-around">
           {/* Column 1: Company Info */}
           <div className="flex-1 px-4 mb-6 min-w-[200px]">
@@ -74,6 +95,13 @@ const Footer = () => {
       <div className="text-center bg-black p-4">
         <p className="text-white">© 2024 Mrs. Hang Farm. All rights reserved.</p>
       </div>
+      {showTopButton && (
+        <button 
+          onClick={scrollToTop} 
+          className="fixed bottom-8 right-8 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300">
+          <FaArrowUp />
+        </button>
+      )}
     </footer>
   );
 };

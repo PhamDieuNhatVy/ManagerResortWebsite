@@ -5,7 +5,7 @@ import { db } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { FaShoppingCart } from 'react-icons/fa'; // Import cart icon
 import Swiper from './layouts/Swiper';
-import Footer from '../components/Footer';
+import Review from './Review';
 
 const Home = () => {
   const [rooms, setRooms] = useState([]);
@@ -63,18 +63,15 @@ const Home = () => {
           <h2 className="text-3xl font-semibold mb-4 text-gray-800">Phòng sang trọng</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl px-4">
             {rooms.slice(0, 3).map((room) => (
-              <div key={room.id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg">
-                <a href="#">
-                  <img className="rounded-t-lg w-full h-64 object-cover" src={room.imageUrl || 'https://via.placeholder.com/300'} alt={room.name} />
+              <div key={room.id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+                <a href="#" className="block overflow-hidden">
+                  <img className="rounded-t-lg w-full h-64 object-cover transform transition duration-300 ease-in-out hover:scale-110" src={room.imageUrl || 'https://via.placeholder.com/300'} alt={room.name} />
                 </a>
                 <div className="px-5 py-4">
                   <h5 className="text-xl font-semibold text-gray-900">{room.name}</h5>
                   <div className="flex items-center justify-between mt-4">
                     <span className="font-bold text-gray-900">{room.price} VND</span>
-                    <button
-                      className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5"
-                      onClick={() => handleAddToCart(room)}
-                    >
+                    <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5" onClick={() => handleAddToCart(room)}>
                       <FaShoppingCart className="w-4 h-4" />
                     </button>
                   </div>
@@ -83,9 +80,7 @@ const Home = () => {
             ))}
           </div>
           <div className="text-center mt-6">
-            <Link to="/room-order" className="bg-blue-700 text-white py-2 px-6 rounded-md hover:bg-blue-800 transition-colors">
-              Xem tất cả phòng
-            </Link>
+            <Link to="/room-order" className="bg-blue-700 text-white py-2 px-6 rounded-md hover:bg-blue-800 transition-colors">Xem tất cả phòng</Link>
           </div>
         </div>
 
@@ -94,19 +89,16 @@ const Home = () => {
           <h2 className="text-3xl font-semibold mb-4 text-gray-800">Chuyến tham quan hấp dẫn</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl px-4">
             {tours.slice(0, 3).map((tour) => (
-              <div key={tour.id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg">
-                <a href="#">
-                  <img className="rounded-t-lg w-full h-64 object-cover" src={tour.imageUrl || 'https://via.placeholder.com/300'} alt={tour.name} />
+              <div key={tour.id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+                <a href="#" className="block overflow-hidden">
+                  <img className="rounded-t-lg w-full h-64 object-cover transform transition duration-300 ease-in-out hover:scale-110" src={tour.imageUrl || 'https://via.placeholder.com/300'} alt={tour.name} />
                 </a>
                 <div className="px-5 py-4">
                   <h5 className="text-xl font-semibold text-gray-900">{tour.name}</h5>
                   <div className="flex items-center justify-between mt-4">
                     <span className="font-bold text-gray-900">{tour.price} VND</span>
-                    <button
-                      className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5"
-                      onClick={() => handleAddToCart(tour)}
-                    >
-                     <FaShoppingCart className="w-4 h-4" />
+                    <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5" onClick={() => handleAddToCart(tour)}>
+                      <FaShoppingCart className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -114,9 +106,7 @@ const Home = () => {
             ))}
           </div>
           <div className="text-center mt-6">
-            <Link to="/tour-order" className="bg-blue-700 text-white py-2 px-6 rounded-md hover:bg-blue-800 transition-colors">
-              Xem tất cả chuyến tham quan
-            </Link>
+            <Link to="/tour-order" className="bg-blue-700 text-white py-2 px-6 rounded-md hover:bg-blue-800 transition-colors">Xem tất cả chuyến tham quan</Link>
           </div>
         </div>
 
@@ -125,19 +115,16 @@ const Home = () => {
           <h2 className="text-3xl font-semibold mb-4 text-gray-800">Món ăn ngon</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl px-4">
             {foods.slice(0, 3).map((food) => (
-              <div key={food.id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg">
-                <a href="#">
-                  <img className="rounded-t-lg w-full h-64 object-cover" src={food.imageUrl || 'https://via.placeholder.com/300'} alt={food.name} />
+              <div key={food.id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+                <a href="#" className="block overflow-hidden">
+                  <img className="rounded-t-lg w-full h-64 object-cover transform transition duration-300 ease-in-out hover:scale-110" src={food.imageUrl || 'https://via.placeholder.com/300'} alt={food.name} />
                 </a>
                 <div className="px-5 py-4">
                   <h5 className="text-xl font-semibold text-gray-900">{food.name}</h5>
                   <div className="flex items-center justify-between mt-4">
                     <span className="font-bold text-gray-900">{food.price} VND</span>
-                    <button
-                      className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5"
-                      onClick={() => handleAddToCart(food)}
-                    >
-                <FaShoppingCart className="w-4 h-4" />
+                    <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5" onClick={() => handleAddToCart(food)}>
+                      <FaShoppingCart className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -145,9 +132,7 @@ const Home = () => {
             ))}
           </div>
           <div className="text-center mt-6">
-            <Link to="/food-order" className="bg-blue-700 text-white py-2 px-6 rounded-md hover:bg-blue-800 transition-colors">
-              Xem tất cả món ăn
-            </Link>
+            <Link to="/food-order" className="bg-blue-700 text-white py-2 px-6 rounded-md hover:bg-blue-800 transition-colors">Xem tất cả món ăn</Link>
           </div>
         </div>
 
@@ -167,6 +152,9 @@ const Home = () => {
         )}
 
       </main>
+   
+
+ 
     </div>
   );
 };
