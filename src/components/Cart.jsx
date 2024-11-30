@@ -1,80 +1,100 @@
-import React from 'react';
-import { Container, Typography, Grid, Card, CardContent, Button, Box } from '@mui/material';
-import { useCart } from '../context/CartContext'; // Import useCart từ CartContext
-import { useNavigate } from 'react-router-dom';  // Để điều hướng khi nhấn nút thanh toán
+import React, { useState } from 'react';
+import { useCart } from '../context/CartContext'; 
+import { useNavigate } from 'react-router-dom'; 
 
 const CartPage = () => {
-  const { cart, removeFromCart } = useCart(); // Lấy giỏ hàng từ CartContext
-  const navigate = useNavigate();  // Điều hướng đến trang thanh toán khi bấm thanh toán
+  const { cart, removeFromCart, updateQuantity } = useCart();  // Get cart and necessary functions from CartContext
+  const navigate = useNavigate();
+
+  // Handle quantity change and update total price
+  const handleQuantityChange = (itemId, quantity) => {
+    if (quantity > 0) {
+      updateQuantity(itemId, quantity); // Update item quantity in the cart
+    }
+  };
 
   const handleRemoveFromCart = (itemId) => {
-    removeFromCart(itemId); // Xóa sản phẩm khỏi giỏ hàng
+    removeFromCart(itemId); // Remove item from cart
   };
 
   const handleCheckout = () => {
-    navigate('/checkout');  // Điều hướng đến trang thanh toán
+    navigate('/checkout');  // Navigate to checkout page
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Container maxWidth="lg" sx={{ mt: 8, flexGrow: 1 }}>
-        <Typography variant="h4" gutterBottom>
-          Giỏ hàng của bạn
-        </Typography>
-        
+    <div className="flex flex-col">
+      <div className="mt-8 text-center">
         {cart.length === 0 ? (
-          <Typography variant="h6">Giỏ hàng của bạn hiện đang trống.</Typography>
+          <div className="flex flex-col items-center justify-center mt-10">
+            <img 
+              src="https://cdni.iconscout.com/illustration/premium/thumb/empty-cart-illustration-download-in-svg-png-gif-file-formats--shopping-ecommerce-simple-error-state-pack-user-interface-illustrations-6024626.png?f=webp" 
+              alt="Empty Cart" 
+              className="w-48 mb-5"  
+            />
+            <h3 className="text-xl text-gray-600">Giỏ hàng của bạn hiện đang trống.</h3>
+          </div>
         ) : (
-          <Grid container spacing={4}>
-            {cart.map((item) => (
-              <Grid item key={item.id} xs={12} sm={6} md={4}>
-                <Card sx={{ height: '100%' }}>
-                  <CardContent>
-                    {/* Hiển thị hình ảnh sản phẩm */}
-                    <img src={item.imageUrl || 'https://via.placeholder.com/300'} alt={item.name} style={{ width: '100%', height: 'auto' }} />
-                    
-                    <Typography gutterBottom variant="h5" component="div">
-                      {item.name}
-                    </Typography>
-                    
-                    <Typography variant="body2" color="text.secondary">
-                      {item.description}
-                    </Typography>
-                    
-                    {/* Hiển thị giá */}
-                    <Typography variant="h6" color="text.primary" sx={{ mt: 1 }}>
-                      {item.price} VND
-                    </Typography>
-                    
-                    {/* Nút Xóa sản phẩm khỏi giỏ hàng */}
-                    <Button 
-                      variant="contained" 
-                      color="secondary" 
-                      onClick={() => handleRemoveFromCart(item.id)}
-                      sx={{ mt: 2 }}
-                    >
-                      Xóa khỏi giỏ hàng
-                    </Button>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+          <div className="overflow-x-auto mt-10">
+            <table className="table-auto w-full max-w-3xl mx-auto">
+              <thead>
+                <tr>
+                  <th className="px-4 py-2 text-left">Sản phẩm</th>
+                  <th className="px-4 py-2 text-left">Giá</th>
+                  <th className="px-4 py-2 text-left">Số lượng</th>
+                  <th className="px-4 py-2 text-left">Tổng</th>
+                  <th className="px-4 py-2 text-center">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cart.map((item) => (
+                  <tr key={item.id} className="border-b">
+                    <td className="px-4 py-2 flex items-center">
+                      <img 
+                        src={item.imageUrl || 'https://via.placeholder.com/100'} 
+                        alt={item.name} 
+                        className="w-16 h-16 object-cover rounded-md mr-4" 
+                      />
+                      <div className="flex flex-col">
+                        <div className="font-semibold">{item.name}</div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-2">{item.price} VND</td>
+                    <td className="px-4 py-2">
+                      <input 
+                        type="number" 
+                        min="1" 
+                        value={item.quantity} 
+                        onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
+                        className="w-20 p-2 text-center border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      />
+                    </td>
+                    <td className="px-4 py-2">{item.price * item.quantity} VND</td>
+                    <td className="px-4 py-2 text-center">
+                      <button 
+                        onClick={() => handleRemoveFromCart(item.id)} 
+                        className="text-red-600 hover:text-red-800 transition duration-300 ease-in-out"
+                      >
+                        <i className="fas fa-trash-alt"></i> Xóa
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
 
         {cart.length > 0 && (
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 4 }}>
-            <Button 
-              variant="contained" 
-              color="primary" 
+          <div className="flex justify-center mt-9">
+            <button 
               onClick={handleCheckout}
-              sx={{ width: '200px', padding: '16px' }}
+              className="py-3 px-8 mb-9 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               Đặt Ngay
-            </Button>
-          </Box>
+            </button>
+          </div>
         )}
-      </Container>
+      </div>
     </div>
   );
 };

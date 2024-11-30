@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../context/CartContext'; // Import useCart từ CartContext
+import { useCart } from '../context/CartContext'; // Import useCart from CartContext
 import { db } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
-
-
+import { FaShoppingCart } from 'react-icons/fa';
 const FoodOrder = () => {
   const [foods, setFoods] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true); // Loading state
   const navigate = useNavigate();
-  const { cart, addToCart } = useCart(); // Sử dụng hook từ CartContext
+  const { cart, addToCart } = useCart(); // Use addToCart from CartContext
 
   useEffect(() => {
     const fetchFoods = async () => {
@@ -25,6 +25,8 @@ const FoodOrder = () => {
       } catch (err) {
         setError('Lỗi khi lấy dữ liệu món ăn. Vui lòng thử lại sau.');
         console.error('Error fetching foods:', err);
+      } finally {
+        setLoading(false); // Set loading to false after data fetch completes
       }
     };
 
@@ -32,57 +34,60 @@ const FoodOrder = () => {
   }, []);
 
   const handleGoToCart = () => {
-    navigate('/cart'); // Điều hướng đến trang giỏ hàng
+    navigate('/cart'); // Navigate to the cart page
   };
 
   const handleAddToCart = (food) => {
-    addToCart(food); // Thêm món ăn vào giỏ hàng
+    addToCart(food); // Add food to the cart
   };
 
   return (
     <div className="flex flex-col min-h-screen">
       <div className="container mx-auto px-4 py-8 flex-grow">
-        <h1 className="text-4xl font-semibold mb-6">Danh sách món ăn</h1>
-        
+
+        {/* Loading State */}
+        {loading && (
+          <div className="mb-4 p-4 bg-yellow-500 text-white rounded-md">
+            Đang tải dữ liệu món ăn...
+          </div>
+        )}
+
+        {/* Error Message */}
         {error && (
           <div className="mb-4 p-4 bg-red-500 text-white rounded-md">
             {error}
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {foods.map((food) => (
-            <div key={food.id} className="max-w-sm rounded overflow-hidden shadow-lg">
-              <img
-                className="w-full h-40 object-cover"
-                src={food.imageUrl || 'https://via.placeholder.com/300'}
-                alt={food.name}
-              />
-              <div className="px-6 py-4">
-                <h2 className="text-xl font-semibold">{food.name}</h2>
-                <p className="text-gray-700 text-base mt-2">{food.description}</p>
-                <div className="mt-4 flex space-x-4">
-                  {/* Nút "Thêm vào giỏ hàng" */}
-                  <button 
-                    className="bg-blue-500 text-white py-2 px-4 rounded-md"
-                    onClick={() => handleAddToCart(food)} 
-                  >
-                    Thêm vào giỏ hàng
-                  </button>
-                  {/* Nút "Xem giỏ hàng" */}
-                  <button 
-                    className="bg-green-500 text-white py-2 px-4 rounded-md"
-                    onClick={handleGoToCart} // Điều hướng đến giỏ hàng
-                  >
-                    Xem giỏ hàng ({cart.length})
-                  </button>
+        {/* Display Food Items */}
+        <div className="mb-12">
+          <h2 className="text-3xl font-semibold mb-4 text-gray-800">Món ăn hấp dẫn</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl px-4">
+            {foods.map((food) => (
+              <div key={food.id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg">
+                <a href="#">
+                  <img className="rounded-t-lg w-full h-64 object-cover" src={food.imageUrl || 'https://via.placeholder.com/300'} alt={food.name} />
+                </a>
+                <div className="px-5 py-4">
+                  <h5 className="text-xl font-semibold text-gray-900">{food.name}</h5>
+                  <p className="text-gray-700 text-base mt-2">{food.description}</p>
+                  <div className="flex items-center justify-between mt-4">
+                    <span className="font-bold text-gray-900">{food.price} VND</span>
+                    <button
+                      className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5"
+                      onClick={() => handleAddToCart(food)}
+                    >
+                      <FaShoppingCart className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 
+     
     </div>
   );
 };
