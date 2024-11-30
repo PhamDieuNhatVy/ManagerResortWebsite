@@ -1,13 +1,12 @@
-// src/context/CartContext.js
 import { createContext, useState, useEffect, useContext } from 'react';
-import { db } from '../firebase'; // Firebase configuration
-import { doc, getDoc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { useAuth } from './AuthContext'; // Import AuthContext để lấy thông tin người dùng
+import { db } from '../firebase';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { useAuth } from './AuthContext';
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const { user } = useAuth(); // Lấy thông tin người dùng từ AuthContext
+  const { user } = useAuth();
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -17,7 +16,6 @@ export const CartProvider = ({ children }) => {
     }
   }, [user]);
 
-  // Lấy giỏ hàng từ Firestore
   const fetchCart = async () => {
     if (user) {
       setLoading(true);
@@ -26,25 +24,37 @@ export const CartProvider = ({ children }) => {
       if (cartDoc.exists()) {
         setCart(cartDoc.data().items);
       } else {
-        await setDoc(cartDocRef, { items: [] }); // Nếu giỏ hàng chưa tồn tại, tạo mới
+        await setDoc(cartDocRef, { items: [] });
         setCart([]);
       }
       setLoading(false);
     }
   };
 
-  // Thêm sản phẩm vào giỏ hàng
   const addToCart = async (product) => {
     if (user) {
       const cartDocRef = doc(db, 'carts', user.uid);
-      await updateDoc(cartDocRef, {
-        items: arrayUnion(product),
-      });
-      setCart((prevCart) => [...prevCart, product]);
+      const cartDoc = await getDoc(cartDocRef);
+      let updatedCart = [];
+
+      if (cartDoc.exists()) {
+        updatedCart = cartDoc.data().items;
+        const existingProduct = updatedCart.find(item => item.id === product.id);
+
+        if (existingProduct) {
+          existingProduct.quantity += 1;
+        } else {
+          updatedCart.push({ ...product, quantity: 1 });
+        }
+      } else {
+        updatedCart = [{ ...product, quantity: 1 }];
+      }
+
+      await updateDoc(cartDocRef, { items: updatedCart });
+      setCart(updatedCart);
     }
   };
 
-  // Xóa sản phẩm khỏi giỏ hàng
   const removeFromCart = async (productId) => {
     if (user) {
       const cartDocRef = doc(db, 'carts', user.uid);
@@ -55,7 +65,25 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  // Xóa tất cả sản phẩm trong giỏ hàng
+  const updateQuantity = async (productId, quantity) => {
+    if (user) {
+      const cartDocRef = doc(db, 'carts', user.uid);
+      const cartDoc = await getDoc(cartDocRef);
+      let updatedCart = [];
+
+      if (cartDoc.exists()) {
+        updatedCart = cartDoc.data().items;
+        const productIndex = updatedCart.findIndex(item => item.id === productId);
+        if (productIndex !== -1) {
+          updatedCart[productIndex].quantity = quantity;
+        }
+      }
+
+      await updateDoc(cartDocRef, { items: updatedCart });
+      setCart(updatedCart);
+    }
+  };
+
   const clearCart = async () => {
     if (user) {
       const cartDocRef = doc(db, 'carts', user.uid);
@@ -65,7 +93,7 @@ export const CartProvider = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, loading }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, loading }}>
       {children}
     </CartContext.Provider>
   );

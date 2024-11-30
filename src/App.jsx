@@ -22,14 +22,26 @@ import TourOrder from './components/TourOrder';
 import Cart from './components/Cart';
 import CheckOut from './components/CheckOut';
 import OrderManagement from './components/OrderManagement'; 
-
+import AdminLayout from './components/AdminLayout';
 
 import './index.css';
 
 function App() {
+
+  const ProtectedRoute = ({ children, allowedRoles }) => {
+    const { user } = useAuth();
+  
+    if (!user || !allowedRoles.includes(user.role)) {
+      return <Navigate to="/" />; // Redirect to home page if not authorized
+    }
+  
+    return children;
+  };
+
+  
   return (
     <AuthProvider>
-      <CartProvider> {/* Đảm bảo CartProvider bao bọc đúng các component */}
+      <CartProvider> 
         <BrowserRouter>
           <div className="app-container">
             <Header />
@@ -53,6 +65,19 @@ function App() {
               <Route path="/room-order" element={<RoomOrder />} />
               <Route path="/food-order" element={<FoodOrder />} />
               <Route path="/tour-order" element={<TourOrder />} />
+
+              {/* <Route path="/admin" element={<AdminPage />} /> */}
+
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <AdminLayout>
+                      <AdminPage />
+                    </AdminLayout>
+                  </ProtectedRoute>
+                }
+              />
             </Routes>
             <Footer />
           </div>

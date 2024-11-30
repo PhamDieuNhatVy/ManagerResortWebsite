@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../context/CartContext'; // Import useCart từ CartContext
+import { useCart } from '../context/CartContext'; // Import useCart from CartContext
 import { db } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
+import { FaShoppingCart } from 'react-icons/fa'; // Import the cart icon
 import Footer from '../components/Footer'; // Import Footer component
 
 const RoomOrder = () => {
-  const [rooms, setRooms] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true); // Thêm loading state
+  const [rooms, setRooms] = useState([]); // State to store rooms data
+  const [error, setError] = useState(null); // State to store error message
+  const [loading, setLoading] = useState(true); // State to handle loading state
   const navigate = useNavigate();
-  const { cart, addToCart } = useCart(); // Dùng hook từ CartContext
+  const { addToCart } = useCart(); // Get the addToCart function from CartContext
 
-  // Lấy dữ liệu phòng từ Firestore
+  // Fetch rooms data from Firestore
   useEffect(() => {
     const fetchRooms = async () => {
       try {
@@ -28,86 +29,82 @@ const RoomOrder = () => {
         setError('Lỗi khi lấy dữ liệu phòng. Vui lòng thử lại sau.');
         console.error('Error fetching rooms:', error);
       } finally {
-        setLoading(false); // Set loading thành false khi đã lấy dữ liệu
+        setLoading(false); // Set loading to false once data is fetched
       }
     };
 
     fetchRooms();
   }, []);
 
-  // Điều hướng đến trang giỏ hàng
+  // Navigate to the cart page
   const handleGoToCart = () => {
     navigate('/cart');
   };
 
-  // Thêm phòng vào giỏ hàng
+  // Add room to cart
   const handleAddToCart = (room) => {
-    // Gọi addToCart từ CartContext
     addToCart({
       id: room.id,
       name: room.name,
       description: room.description,
-      price: room.price, // Thêm giá phòng vào giỏ
-      imageUrl: room.imageUrl || 'https://via.placeholder.com/300', // Dùng ảnh mặc định nếu không có ảnh
+      price: room.price,
+      imageUrl: room.imageUrl || 'https://via.placeholder.com/300', // Default image if no imageUrl is provided
     });
   };
 
   return (
     <div className="flex flex-col min-h-screen">
       <div className="container mx-auto px-4 py-8 flex-grow">
-        <h1 className="text-4xl font-semibold mb-6">Danh sách phòng</h1>
-        
-        {/* Hiển thị trạng thái loading */}
+
+
+        {/* Display loading state */}
         {loading && (
           <div className="mb-4 p-4 bg-yellow-500 text-white rounded-md">
             Đang tải dữ liệu phòng...
           </div>
         )}
 
-        {/* Hiển thị thông báo lỗi nếu có */}
+        {/* Display error message if any */}
         {error && (
           <div className="mb-4 p-4 bg-red-500 text-white rounded-md">
             {error}
           </div>
         )}
 
-        {/* Hiển thị danh sách phòng */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {rooms.map((room) => (
-            <div key={room.id} className="max-w-sm rounded-lg overflow-hidden shadow-lg">
-              <img
-                className="w-full h-40 object-cover"
-                src={room.imageUrl || 'https://via.placeholder.com/300'}
-                alt={room.name}
-              />
-              <div className="px-6 py-4">
-                <h2 className="text-xl font-semibold">{room.name}</h2>
-                <p className="text-gray-700 text-base mt-2">{room.description}</p>
-                <p className="text-gray-900 font-bold mt-2">{room.price} VND</p> {/* Hiển thị giá phòng */}
-                <div className="mt-4 flex space-x-4">
-                  {/* Nút Thêm vào giỏ hàng */}
-                  <button 
-                    className="bg-blue-500 text-white py-2 px-4 rounded-md"
-                    onClick={() => handleAddToCart(room)} // Thêm phòng vào giỏ hàng
-                  >
-                    Thêm vào giỏ hàng
-                  </button>
-                  {/* Nút Xem giỏ hàng */}
-                  <button 
-                    className="bg-green-500 text-white py-2 px-4 rounded-md"
-                    onClick={handleGoToCart} // Điều hướng đến giỏ hàng
-                  >
-                    Xem giỏ hàng ({cart.length})
-                  </button>
+        {/* Display list of rooms */}
+        <div className="mb-12">
+          <h2 className="text-3xl font-semibold mb-4 text-gray-800">Danh sách phòng</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl px-4">
+            {rooms.map((room) => (
+              <div key={room.id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg">
+                <a href="#">
+                  <img
+                    className="rounded-t-lg w-full h-64 object-cover"
+                    src={room.imageUrl || 'https://via.placeholder.com/300'}
+                    alt={room.name}
+                  />
+                </a>
+                <div className="px-5 py-4">
+                  <h5 className="text-xl font-semibold text-gray-900">{room.name}</h5>
+                  <div className="flex items-center justify-between mt-4">
+                    <span className="font-bold text-gray-900">{room.price} VND</span>
+                    <button
+                      className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5"
+                      onClick={() => handleAddToCart(room)}
+                    >
+                      <FaShoppingCart className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+        
+       
       </div>
 
-      {/* Footer */}
-      <Footer />
+ 
     </div>
   );
 };

@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { TextField, Button, Typography, Grid, Container } from '@mui/material';
 import { useRegister } from './services/Auth';
-
 
 const RegisterForm = () => {
   const [username, setUsername] = useState('');
@@ -22,55 +20,71 @@ const RegisterForm = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', justifyContent: 'center' }}>
-      <Typography variant="h4" align="center" gutterBottom>
-        Đăng ký
-      </Typography>
-      <form onSubmit={handleSubmit}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Tên người dùng"
+    <div className="m-10 flex items-center justify-center bg-gray-100">
+      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+        <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">Đăng ký</h2>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-600">
+              Tên người dùng
+            </label>
+            <input
+              id="username"
+              type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Nhập tên người dùng"
             />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Email"
+          </div>
+
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-600">
+              Email
+            </label>
+            <input
+              id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Nhập email"
             />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Mật khẩu"
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-600">
+              Mật khẩu
+            </label>
+            <input
+              id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Nhập mật khẩu"
             />
-          </Grid>
-          <Grid item xs={12}>
-            <Button type="submit" variant="contained" fullWidth>
-              Đăng ký
-            </Button>
-          </Grid>
-          <Grid item xs={12}>
-            <Link to="/login" variant="body2" className='link'>
-              Bạn đã có tài khoản? Đăng nhập
-            </Link>
-          </Grid>
-        </Grid>
-      </form>
-    
-    </Container>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Đăng ký
+          </button>
+        </form>
+
+        <div className="mt-4 text-center">
+          <Link to="/login" className="text-blue-500 hover:text-blue-700 text-sm">
+            Bạn đã có tài khoản? Đăng nhập
+          </Link>
+        </div>
+      </div>
+    </div>
   );
 };
 

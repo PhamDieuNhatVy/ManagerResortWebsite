@@ -1,29 +1,34 @@
-import React, { useState } from 'react'; // Đừng quên import useState
+import React, { useState } from 'react'; // Don't forget to import useState
 import styled from 'styled-components'; 
 import { Box, Typography, TextField, Button, Container, Alert } from '@mui/material';
 
+// Styled Components
 const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100vh; // Đảm bảo chiều cao tối thiểu của container
+  min-height: 100vh;
+  background-color: #f5f5f5; // Light gray background for the whole container
 `;
 
 const Content = styled.main`
-  background-image: url('https://img.pikbest.com/wp/202344/blue-sky-green-grass-expansive-field-with-fresh-clear-and-plenty-of-copy-space-for-spring-landscape_9932222.jpg!sw800');
+  background: linear-gradient(135deg, rgba(0, 123, 255, 0.5), rgba(0, 255, 123, 0.5));
   background-size: cover;
-  color: black; 
+  background-position: center;
+  color: white;
   text-align: center;
-  padding: 100px 0;
-  flex-grow: 1; 
+  padding: 80px 20px;
+  flex-grow: 1;
+  border-radius: 8px;
 `;
 
 const Title = styled.h1`
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  color: yellow;
-  font-weight: bold; // Add this line
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
 `;
-    
+
 const Contact = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -34,7 +39,7 @@ const Contact = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Giả sử gửi thành công
+    // Simulate successful submission
     setAlertMessage('Thành công! Cảm ơn bạn đã liên hệ.');
     setAlertSeverity('success');
     
@@ -49,7 +54,7 @@ const Contact = () => {
       <Content>
         <Title>Liên hệ với chúng tôi</Title>
         {alertMessage && (
-          <Alert severity={alertSeverity} sx={{ mb: 2 }}>
+          <Alert severity={alertSeverity} sx={{ mb: 3 }}>
             {alertMessage}
           </Alert>
         )}
@@ -63,19 +68,19 @@ const Contact = () => {
               onChange={(e) => setName(e.target.value)}
               required
               InputLabelProps={{
-                sx: { color: 'white' }, // Màu trắng cho label
+                sx: { color: 'white' },
               }}
               InputProps={{
                 sx: { 
                   '& .MuiOutlinedInput-root': {
                     '& fieldset': {
-                      borderColor: 'darkgreen', // Màu xanh đậm cho viền
+                      borderColor: 'rgba(255, 255, 255, 0.8)', // Soft white border
                     },
                     '&:hover fieldset': {
-                      borderColor: 'green', // Màu viền khi hover
+                      borderColor: '#007BFF', // Light blue on hover
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: 'blue', // Màu viền khi focus
+                      borderColor: '#28A745', // Green when focused
                     },
                   },
                 },
@@ -91,19 +96,19 @@ const Contact = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               InputLabelProps={{
-                sx: { color: 'white' }, // Màu trắng cho label
+                sx: { color: 'white' },
               }}
               InputProps={{
                 sx: { 
                   '& .MuiOutlinedInput-root': {
                     '& fieldset': {
-                      borderColor: 'darkgreen', // Màu xanh đậm cho viền
+                      borderColor: 'rgba(255, 255, 255, 0.8)',
                     },
                     '&:hover fieldset': {
-                      borderColor: 'green', // Màu viền khi hover
+                      borderColor: '#007BFF',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: 'blue', // Màu viền khi focus
+                      borderColor: '#28A745',
                     },
                   },
                 },
@@ -120,26 +125,39 @@ const Contact = () => {
               onChange={(e) => setMessage(e.target.value)}
               required
               InputLabelProps={{
-                sx: { color: 'white' }, // Màu trắng cho label
+                sx: { color: 'white' },
               }}
               InputProps={{
                 sx: { 
                   '& .MuiOutlinedInput-root': {
                     '& fieldset': {
-                      borderColor: 'darkgreen', // Màu xanh đậm cho viền
+                      borderColor: 'rgba(255, 255, 255, 0.8)',
                     },
                     '&:hover fieldset': {
-                      borderColor: 'green', // Màu viền khi hover
+                      borderColor: '#007BFF',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: 'blue', // Màu viền khi focus
+                      borderColor: '#28A745',
                     },
                   },
                 },
               }}
               sx={{ mb: 2 }}
             />
-            <Button type="submit" variant="contained" color="primary" fullWidth>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{
+                backgroundColor: '#28A745', // Green background for button
+                padding: '14px',
+                '&:hover': {
+                  backgroundColor: '#218838', // Darker green on hover
+                },
+                fontWeight: 600,
+              }}
+            >
               Gửi
             </Button>
           </form>
