@@ -27,6 +27,23 @@ const Room = () => {
     fetchRooms();
   }, []);
 
+  const handleImageUpload = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('http://localhost:5000/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await response.json();
+      setImageUrl(data.fileUrl);  // Set the returned image URL to the state
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      Swal.fire('Error', 'Failed to upload image.', 'error');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -96,18 +113,10 @@ const Room = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <main className="p-2 flex-grow">
-        <h1 className="text-2xl font-bold mb-5">Quản Lý Phòng</h1>
-
-        {/* Nút Quay lại */}
-        <button 
-          onClick={() => navigate(-1)} 
-          className="bg-gray-500 text-white px-4 py-2 rounded mb-5"
-        >
-          Quay lại
-        </button>
+        <h1 className="text-2xl font-bold mb-4">Quản Lý Phòng</h1>
 
         <button 
-          className="bg-blue-500 text-white px-4 py-2 rounded mb-5"
+          className="bg-blue-500 text-white px-4 py-2 rounded mb-1"
           onClick={() => {
             setIsModalOpen(true);
             setEditRoomId(null);
@@ -147,13 +156,11 @@ const Room = () => {
                   min="1"
                 />
                 <input
-                  type="text"
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  placeholder="URL hình ảnh"
-                  required
+                  type="file"
+                  onChange={(e) => handleImageUpload(e.target.files[0])}
                   className="border border-gray-300 p-2 w-full mb-4 rounded"
                 />
+                {imageUrl && <img src={imageUrl} alt="Uploaded" className="w-16 h-16 object-cover mb-4" />}
                 <div className="flex justify-between">
                   <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
                     {editRoomId ? "Cập Nhật" : "Thêm"}

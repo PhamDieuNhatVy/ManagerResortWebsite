@@ -39,7 +39,7 @@ function App() {
               <Route path="/login" element={<MainLayout><Login /></MainLayout>} />
               <Route path="/register" element={<MainLayout><Register /></MainLayout>} />
               <Route path="/logout" element={<Logout />} />
-              <Route path="/cart" element={<Cart />} />
+              <Route path="/cart" element={<MainLayout><Cart /></MainLayout>} />
               <Route path="/checkout" element={<CheckOut />} />
               <Route path="/ordermanagement" element={<OrderManagement />} />
 
@@ -59,7 +59,7 @@ function App() {
               <Route path="/tour" element={<Tour />} />
               <Route path="/bookingform" element={<BookingForm />} />
               <Route path="/room-order" element={<RoomOrder />} />
-              <Route path="/food-order" element={<FoodOrder />} />
+              <Route path="/food-order" element={<MainLayout><FoodOrder /></MainLayout>} />
               <Route path="/tour-order" element={<TourOrder />} />
             </Routes>
           </div>

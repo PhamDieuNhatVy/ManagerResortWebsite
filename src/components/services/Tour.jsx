@@ -2,18 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import Swal from 'sweetalert2';
 import { db } from '../../firebase';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // Import Axios for API requests
 
 const Tour = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [imageFile, setImageFile] = useState(null); // To store selected image
   const [tours, setTours] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editTourId, setEditTourId] = useState(null);
-  const navigate = useNavigate(); // Khai báo useNavigate
+  const navigate = useNavigate();
 
   const fetchTours = async () => {
     const toursCollection = collection(db, 'tours');
@@ -27,9 +29,27 @@ const Tour = () => {
     fetchTours();
   }, []);
 
+  const handleImageUpload = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('http://localhost:5000/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await response.json();
+      setImageUrl(data.fileUrl);  // Set the returned image URL to the state
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      Swal.fire('Error', 'Failed to upload image.', 'error');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    
     const tour = {
       name,
       description,
@@ -52,6 +72,7 @@ const Tour = () => {
       setDescription('');
       setPrice('');
       setImageUrl('');
+      setImageFile(null);
       fetchTours();
       setIsModalOpen(false);
       setEditTourId(null);
@@ -96,18 +117,10 @@ const Tour = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <main className="p-2 flex-grow">
-        <h1 className="text-2xl font-bold mb-5">Quản Lý Tour</h1>
-
-        {/* Nút Quay lại */}
-        <button 
-          onClick={() => navigate(-1)} 
-          className="bg-gray-500 text-white px-4 py-2 rounded mb-5"
-        >
-          Quay lại
-        </button>
+        <h1 className="text-2xl font-bold mb-4">Quản Lý Tour</h1>
 
         <button 
-          className="bg-blue-500 text-white px-4 py-2 rounded mb-5"
+          className="bg-blue-500 text-white px-4 py-2 rounded mb-1"
           onClick={() => {
             setIsModalOpen(true);
             setEditTourId(null);
@@ -146,14 +159,12 @@ const Tour = () => {
                   className="border border-gray-300 p-2 w-full mb-4 rounded"
                   min="0"
                 />
-                <input
-                  type="text"
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  placeholder="URL hình ảnh"
-                  required={!editTourId} // Yêu cầu URL hình ảnh cho tour mới
+                 <input
+                  type="file"
+                  onChange={(e) => handleImageUpload(e.target.files[0])}
                   className="border border-gray-300 p-2 w-full mb-4 rounded"
                 />
+                {imageUrl && <img src={imageUrl} alt="Tour" className="w-16 h-16 object-cover" />}
                 <div className="flex justify-between">
                   <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
                     {editTourId ? "Cập Nhật" : "Thêm"}
