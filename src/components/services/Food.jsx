@@ -3,7 +3,7 @@ import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from 'firebase
 import { db } from '../../firebase';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-
+import config from '../../../config';
 const Food = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -32,7 +32,8 @@ const Food = () => {
     formData.append('file', image);
 
     try {
-      const response = await fetch('http://192.168.1.96:5000/api/upload', {
+      const response = await fetch(config.apiUrl, {
+
         method: 'POST',
         body: formData,
       });

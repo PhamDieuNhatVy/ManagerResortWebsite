@@ -3,8 +3,7 @@ import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from 'firebase
 import Swal from 'sweetalert2';
 import { db } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Import Axios for API requests
-
+import config from '../../../config';
 const Tour = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -34,7 +33,8 @@ const Tour = () => {
     formData.append('file', file);
 
     try {
-      const response = await fetch('http://localhost:5000/api/upload', {
+      
+      const response = await fetch(config.apiUrl, { 
         method: 'POST',
         body: formData,
       });
@@ -49,7 +49,6 @@ const Tour = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    
     const tour = {
       name,
       description,
@@ -159,7 +158,7 @@ const Tour = () => {
                   className="border border-gray-300 p-2 w-full mb-4 rounded"
                   min="0"
                 />
-                 <input
+                <input
                   type="file"
                   onChange={(e) => handleImageUpload(e.target.files[0])}
                   className="border border-gray-300 p-2 w-full mb-4 rounded"

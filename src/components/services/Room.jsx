@@ -3,7 +3,7 @@ import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from 'firebase
 import Swal from 'sweetalert2';
 import { db } from '../../firebase';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
-
+import config from '../../../config';
 const Room = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -32,7 +32,8 @@ const Room = () => {
     formData.append('file', file);
 
     try {
-      const response = await fetch('http://localhost:5000/api/upload', {
+  
+      const response = await fetch(config.apiUrl, {
         method: 'POST',
         body: formData,
       });
