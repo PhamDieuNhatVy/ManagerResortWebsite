@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext'; 
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'; // Importing useAuth
 
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity } = useCart();  // Get cart and necessary functions from CartContext
   const navigate = useNavigate();
+  const { user, loading } = useAuth(); // Using the user context from AuthContext
 
-  // Handle quantity change and update total price
   const handleQuantityChange = (itemId, quantity) => {
     if (quantity > 0) {
       updateQuantity(itemId, quantity); // Update item quantity in the cart
@@ -18,7 +19,11 @@ const CartPage = () => {
   };
 
   const handleCheckout = () => {
-    navigate('/checkout');  // Navigate to checkout page
+    if (user) {
+      navigate('/checkout', { state: { userData: user, cart } }); // Pass user data and cart to checkout page
+    } else {
+      alert('User not logged in!');
+    }
   };
 
   return (

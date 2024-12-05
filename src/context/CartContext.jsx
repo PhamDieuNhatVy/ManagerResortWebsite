@@ -24,8 +24,12 @@ export const CartProvider = ({ children }) => {
       if (cartDoc.exists()) {
         setCart(cartDoc.data().items);
       } else {
-        await setDoc(cartDocRef, { items: [] });
-        setCart([]);
+        // Create a new cart document with email and empty items if it doesn't exist
+        await setDoc(cartDocRef, { 
+          items: [], 
+          email: user.email // Store the user's email
+        });
+        setCart([]); 
       }
       setLoading(false);
     }
@@ -50,7 +54,11 @@ export const CartProvider = ({ children }) => {
         updatedCart = [{ ...product, quantity: 1 }];
       }
 
-      await updateDoc(cartDocRef, { items: updatedCart });
+      // Update the cart and include the user's email
+      await updateDoc(cartDocRef, { 
+        items: updatedCart,
+        email: user.email // Ensure email is updated in the cart
+      });
       setCart(updatedCart);
     }
   };
@@ -87,7 +95,7 @@ export const CartProvider = ({ children }) => {
   const clearCart = async () => {
     if (user) {
       const cartDocRef = doc(db, 'carts', user.uid);
-      await setDoc(cartDocRef, { items: [] });
+      await setDoc(cartDocRef, { items: [], email: user.email });
       setCart([]);
     }
   };

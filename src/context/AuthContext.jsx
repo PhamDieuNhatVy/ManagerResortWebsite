@@ -12,17 +12,22 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        // Lấy thông tin người dùng từ Firestore
+        // Get user data from Firestore
         const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
         if (userDoc.exists()) {
           const userData = {
             uid: firebaseUser.uid,
             email: firebaseUser.email,
-            role: userDoc.data().role || 'user', // Mặc định là 'user'
+            role: userDoc.data().role || 'user', // Default 'user' role if not found
+            username: userDoc.data().username || '',
+            cccd: userDoc.data().cccd || '',
+            address: userDoc.data().address || '',
+            age: userDoc.data().age || '',
+            phone: userDoc.data().phone || '',
           };
           setUser(userData);
         } else {
-          setUser(null); // Nếu không có dữ liệu người dùng trong Firestore
+          setUser(null); // If no user data found in Firestore
         }
       } else {
         setUser(null);
@@ -38,22 +43,27 @@ export const AuthProvider = ({ children }) => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const firebaseUser = userCredential.user;
 
-      // Lấy thông tin vai trò từ Firestore
+      // Get user data from Firestore
       const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
       if (userDoc.exists()) {
         const userData = {
           uid: firebaseUser.uid,
           email: firebaseUser.email,
-          role: userDoc.data().role || 'user', // Mặc định role là 'user'
+          role: userDoc.data().role || 'user', // Default 'user' role if not found
+          username: userDoc.data().username || '',
+          cccd: userDoc.data().cccd || '',
+          address: userDoc.data().address || '',
+          age: userDoc.data().age || '',
+          phone: userDoc.data().phone || '',
         };
         setUser(userData);
-        return userData; // Trả về dữ liệu người dùng, bao gồm vai trò
+        return userData; // Return user data, including role
       } else {
-        throw new Error('Không tìm thấy thông tin người dùng.');
+        throw new Error('User data not found.');
       }
     } catch (error) {
-      console.error('Lỗi đăng nhập:', error.message);
-      throw error; // Quăng lỗi để xử lý ở phía component
+      console.error('Login error:', error.message);
+      throw error; // Rethrow error to be handled in components
     }
   };
 

@@ -4,10 +4,12 @@ import Swal from 'sweetalert2';
 import { db } from '../../firebase';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import config from '../../../config';
+
 const Room = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [capacity, setCapacity] = useState('');
+  const [price, setPrice] = useState(''); // Add price state
   const [imageUrl, setImageUrl] = useState('');
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +34,6 @@ const Room = () => {
     formData.append('file', file);
 
     try {
-  
       const response = await fetch(config.apiUrl, {
         method: 'POST',
         body: formData,
@@ -52,6 +53,7 @@ const Room = () => {
       name,
       description,
       capacity: parseInt(capacity),
+      price: parseFloat(price), // Include price in the room object
       imageUrl,
     };
 
@@ -69,6 +71,7 @@ const Room = () => {
       setName('');
       setDescription('');
       setCapacity('');
+      setPrice(''); // Reset price
       setImageUrl('');
       fetchRooms();
       setIsModalOpen(false);
@@ -83,6 +86,7 @@ const Room = () => {
     setName(room.name);
     setDescription(room.description);
     setCapacity(room.capacity);
+    setPrice(room.price); // Set price
     setImageUrl(room.imageUrl);
     setEditRoomId(room.id);
     setIsModalOpen(true);
@@ -157,6 +161,16 @@ const Room = () => {
                   min="1"
                 />
                 <input
+                  type="number"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  placeholder="Giá"
+                  required
+                  className="border border-gray-300 p-2 w-full mb-4 rounded"
+                  min="0"
+                  step="0.01"
+                />
+                <input
                   type="file"
                   onChange={(e) => handleImageUpload(e.target.files[0])}
                   className="border border-gray-300 p-2 w-full mb-4 rounded"
@@ -183,6 +197,7 @@ const Room = () => {
               <th className="py-2 px-4 border-b text-left">Tên</th>
               <th className="py-2 px-4 border-b text-left">Mô Tả</th>
               <th className="py-2 px-4 border-b text-left">Sức Chứa</th>
+              <th className="py-2 px-4 border-b text-left">Giá</th> {/* Add price column */}
               <th className="py-2 px-4 border-b text-left">Hình Ảnh</th>
               <th className="py-2 px-4 border-b text-left">Hành Động</th>
             </tr>
@@ -193,6 +208,7 @@ const Room = () => {
                 <td className="py-2 px-4 border-b">{room.name}</td>
                 <td className="py-2 px-4 border-b">{room.description}</td>
                 <td className="py-2 px-4 border-b">{room.capacity}</td>
+                <td className="py-2 px-4 border-b">{room.price}</td> {/* Display price */}
                 <td className="py-2 px-4 border-b">
                   {room.imageUrl && <img src={room.imageUrl} alt={room.name} className="w-16 h-16 object-cover" />}
                 </td>

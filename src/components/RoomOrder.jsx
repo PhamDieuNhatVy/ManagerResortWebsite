@@ -12,7 +12,7 @@ const RoomOrder = () => {
   const [loading, setLoading] = useState(true); // State to handle loading state
   const navigate = useNavigate();
   const { addToCart } = useCart(); // Get the addToCart function from CartContext
-
+  const [showToast, setShowToast] = useState(false);
   // Fetch rooms data from Firestore
   useEffect(() => {
     const fetchRooms = async () => {
@@ -87,7 +87,7 @@ const RoomOrder = () => {
                 <div className="px-5 py-4">
                   <h5 className="text-xl font-semibold text-gray-900">{room.name}</h5>
                   <div className="flex items-center justify-between mt-4">
-                    <span className="font-bold text-gray-900">{room.price} VND</span>
+                    <span className="font-bold text-gray-900">{room.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
                     <button
                       className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5"
                       onClick={() => handleAddToCart(room)}
@@ -104,7 +104,20 @@ const RoomOrder = () => {
        
       </div>
 
- 
+      {showToast && (
+          <div className="fixed bottom-10 right-10">
+            <div id="toast-success" className="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+              <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+                <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                </svg>
+                <span className="sr-only">Check icon</span>
+              </div>
+              <div className="ms-3 text-sm font-normal">Đã thêm vào giỏ hàng</div>
+            </div>
+          </div>
+        )}
+
     </div>
   );
 };

@@ -1,33 +1,5 @@
-import React, { useState } from 'react'; // Don't forget to import useState
-import styled from 'styled-components'; 
-import { Box, Typography, TextField, Button, Container, Alert } from '@mui/material';
-
-// Styled Components
-const StyledContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: #f5f5f5; // Light gray background for the whole container
-`;
-
-const Content = styled.main`
-  background: linear-gradient(135deg, rgba(0, 123, 255, 0.5), rgba(0, 255, 123, 0.5));
-  background-size: cover;
-  background-position: center;
-  color: white;
-  text-align: center;
-  padding: 80px 20px;
-  flex-grow: 1;
-  border-radius: 8px;
-`;
-
-const Title = styled.h1`
-  font-size: 2.5rem;
-  margin-bottom: 1.5rem;
-  color: #fff;
-  font-weight: 600;
-  text-transform: uppercase;
-`;
+import React, { useState } from 'react';
+import { Alert } from '@mui/material';
 
 const Contact = () => {
   const [name, setName] = useState('');
@@ -50,120 +22,63 @@ const Contact = () => {
   };
 
   return (
-    <StyledContainer>
-      <Content>
-        <Title>Liên hệ với chúng tôi</Title>
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      <div className="bg-gradient-to-r from-blue-500 to-green-500 p-12 text-white text-center rounded-b-lg">
+        <h1 className="text-4xl font-semibold mb-6">Liên hệ với chúng tôi</h1>
         {alertMessage && (
           <Alert severity={alertSeverity} sx={{ mb: 3 }}>
             {alertMessage}
           </Alert>
         )}
-        <Container maxWidth="sm">
-          <form onSubmit={handleSubmit}>
-            <TextField
-              fullWidth
-              label="Họ và tên"
-              variant="outlined"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              InputLabelProps={{
-                sx: { color: 'white' },
-              }}
-              InputProps={{
-                sx: { 
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: 'rgba(255, 255, 255, 0.8)', // Soft white border
-                    },
-                    '&:hover fieldset': {
-                      borderColor: '#007BFF', // Light blue on hover
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#28A745', // Green when focused
-                    },
-                  },
-                },
-              }}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              label="Email"
-              type="email"
-              variant="outlined"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              InputLabelProps={{
-                sx: { color: 'white' },
-              }}
-              InputProps={{
-                sx: { 
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: 'rgba(255, 255, 255, 0.8)',
-                    },
-                    '&:hover fieldset': {
-                      borderColor: '#007BFF',
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#28A745',
-                    },
-                  },
-                },
-              }}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              label="Tin nhắn"
-              variant="outlined"
-              multiline
-              rows={4}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              required
-              InputLabelProps={{
-                sx: { color: 'white' },
-              }}
-              InputProps={{
-                sx: { 
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: 'rgba(255, 255, 255, 0.8)',
-                    },
-                    '&:hover fieldset': {
-                      borderColor: '#007BFF',
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#28A745',
-                    },
-                  },
-                },
-              }}
-              sx={{ mb: 2 }}
-            />
-            <Button
+
+        <div className="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="flex flex-col">
+              <label htmlFor="name" className="text-gray-700 font-semibold mb-2">Họ và tên</label>
+              <input
+                type="text"
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                className="p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="email" className="text-gray-700 font-semibold mb-2">Email</label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="message" className="text-gray-700 font-semibold mb-2">Tin nhắn</label>
+              <textarea
+                id="message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                required
+                rows="4"
+                className="p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <button
               type="submit"
-              variant="contained"
-              color="primary"
-              fullWidth
-              sx={{
-                backgroundColor: '#28A745', // Green background for button
-                padding: '14px',
-                '&:hover': {
-                  backgroundColor: '#218838', // Darker green on hover
-                },
-                fontWeight: 600,
-              }}
+              className="w-full py-3 px-6 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               Gửi
-            </Button>
+            </button>
           </form>
-        </Container>
-      </Content>
-    </StyledContainer>
+        </div>
+      </div>
+    </div>
   );
 };
 

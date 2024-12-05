@@ -26,10 +26,10 @@ const Sidebar = ({ children }) => {
 
   const menuItem = [
     { path: '/admin', name: 'Trang chủ', icon: <FaHome /> },
-    { path: '/admin/food', name: 'Food', icon: <FaUtensils /> },
-    { path: '/admin/room', name: 'Room', icon: <FaBed /> },
-    { path: '/admin/tour', name: 'Tour', icon: <FaBed /> },
-    { path: '/admin/orders', name: 'Orders', icon: <FaShoppingCart /> },
+    { path: '/admin/food', name: 'Quản lý món ăn', icon: <FaUtensils /> },
+    { path: '/admin/room', name: 'Quản lý phòng', icon: <FaBed /> },
+    { path: '/admin/tour', name: 'Quản lý Tour', icon: <FaBed /> },
+    { path: '/admin/orders', name: 'Quản lý đơn đặt hàng', icon: <FaShoppingCart /> },
 
   ];
 

@@ -70,7 +70,7 @@ const Home = () => {
                 <div className="px-5 py-4">
                   <h5 className="text-xl font-semibold text-gray-900">{room.name}</h5>
                   <div className="flex items-center justify-between mt-4">
-                    <span className="font-bold text-gray-900">{room.price} VND</span>
+                    <span className="font-bold text-gray-900">{room.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
                     <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5" onClick={() => handleAddToCart(room)}>
                       <FaShoppingCart className="w-4 h-4" />
                     </button>
@@ -96,7 +96,7 @@ const Home = () => {
                 <div className="px-5 py-4">
                   <h5 className="text-xl font-semibold text-gray-900">{tour.name}</h5>
                   <div className="flex items-center justify-between mt-4">
-                    <span className="font-bold text-gray-900">{tour.price} VND</span>
+                    <span className="font-bold text-gray-900">{tour.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
                     <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5" onClick={() => handleAddToCart(tour)}>
                       <FaShoppingCart className="w-4 h-4" />
                     </button>
@@ -122,7 +122,7 @@ const Home = () => {
                 <div className="px-5 py-4">
                   <h5 className="text-xl font-semibold text-gray-900">{food.name}</h5>
                   <div className="flex items-center justify-between mt-4">
-                    <span className="font-bold text-gray-900">{food.price} VND</span>
+                    <span className="font-bold text-gray-900">{food.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
                     <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5" onClick={() => handleAddToCart(food)}>
                       <FaShoppingCart className="w-4 h-4" />
                     </button>

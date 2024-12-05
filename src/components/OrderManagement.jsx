@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Grid, Card, CardContent, Button, Box, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
-import { db } from '../firebase'; // Firebase configuration
+import { db } from '../firebase'; // Cấu hình Firebase
 import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
-
+import { ToastContainer, toast } from 'react-toastify'; // Để hiển thị thông báo
 
 const OrderManagementPage = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Lấy tất cả đơn hàng từ Firestore
+  // Lấy tất cả các đơn hàng từ Firestore
   const fetchOrders = async () => {
     try {
       setLoading(true);
@@ -21,87 +20,84 @@ const OrderManagementPage = () => {
       setOrders(ordersList);
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching orders:', error);
+      console.error('Lỗi khi lấy đơn hàng:', error);
       setLoading(false);
     }
   };
 
-  // Thay đổi trạng thái đơn hàng
+  // Xử lý thay đổi trạng thái đơn hàng
   const handleStatusChange = async (orderId, newStatus) => {
     try {
       const orderDocRef = doc(db, 'orders', orderId);
       await updateDoc(orderDocRef, { status: newStatus });
-      // Cập nhật lại danh sách đơn hàng sau khi thay đổi trạng thái
+      // Cập nhật danh sách đơn hàng trong giao diện sau khi thay đổi trạng thái
       setOrders(orders.map(order =>
         order.id === orderId ? { ...order, status: newStatus } : order
       ));
+      toast.success('Trạng thái đơn hàng đã được cập nhật!');
     } catch (error) {
-      console.error('Error updating order status:', error);
+      console.error('Lỗi khi cập nhật trạng thái đơn hàng:', error);
+      toast.error('Không thể cập nhật trạng thái!');
     }
   };
 
-  // Gọi hàm lấy đơn hàng khi trang được tải
+  // Lấy đơn hàng khi trang được tải
   useEffect(() => {
     fetchOrders();
   }, []);
 
   if (loading) {
-    return <Typography variant="h6" align="center">Đang tải...</Typography>;
+    return <div className="text-center">Đang tải...</div>;
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Container maxWidth="lg" sx={{ mt: 8, flexGrow: 1 }}>
-        <Typography variant="h4" gutterBottom>
-          Quản lý Đơn Hàng
-        </Typography>
+    <div className="flex flex-col ">
+      <h1 className="text-2xl font-bold mb-4">Quản Lý Đơn Hàng</h1>
 
-        {orders.length === 0 ? (
-          <Typography variant="h6">Hiện tại không có đơn hàng nào.</Typography>
-        ) : (
-          <Grid container spacing={4}>
+      {orders.length === 0 ? (
+        <p className="text-center text-lg">Hiện tại không có đơn hàng nào.</p>
+      ) : (
+        <table className="min-w-full table-auto border-collapse">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Mã Đơn Hàng</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Người Mua</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Địa Chỉ</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Tổng Giá</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Trạng Thái</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Thao Tác</th>
+            </tr>
+          </thead>
+          <tbody>
             {orders.map((order) => (
-              <Grid item xs={12} sm={6} md={4} key={order.id}>
-                <Card sx={{ height: '100%' }}>
-                  <CardContent>
-                    <Typography gutterBottom variant="h5">
-                      Đơn hàng #{order.id}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Người mua: {order.name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Địa chỉ giao hàng: {order.shippingAddress}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Tổng giá: {order.totalAmount} VND
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Trạng thái: {order.status}
-                    </Typography>
+              <tr key={order.id} className="bg-white border-b">
+                <td className="px-4 py-4 text-sm font-medium text-gray-900">{order.id}</td>
+                <td className="px-4 py-4 text-sm text-gray-900">{order.username}</td>
+                <td className="px-4 py-4 text-sm text-gray-900">{order.address}</td>
+                <td className="px-4 py-4 text-sm text-gray-900">{order.totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</td>
 
-                    <FormControl fullWidth sx={{ mt: 2 }}>
-                      <InputLabel id="status-label">Trạng thái</InputLabel>
-                      <Select
-                        labelId="status-label"
-                        value={order.status}
-                        onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                        label="Trạng thái"
-                      >
-                        <MenuItem value="Pending">Chờ xử lý</MenuItem>
-                        <MenuItem value="Shipped">Đang giao</MenuItem>
-                        <MenuItem value="Delivered">Đã giao</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </CardContent>
-                </Card>
-              </Grid>
+                
+                <td className="px-4 py-4 text-sm text-gray-900">{order.status}</td>
+                <td className="px-4 py-4 text-sm text-gray-900">
+                  {/* Thay đổi trạng thái đơn hàng */}
+                  <select
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md"
+                    value={order.status}
+                    onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                  >
+                    <option value="Pending">Chờ xử lý</option>
+                    <option value="Shipped">Đang giao</option>
+                    <option value="Delivered">Đã giao</option>
+                    <option value="Cancelled">Đã hủy</option>
+                  </select>
+                </td>
+              </tr>
             ))}
-          </Grid>
-        )}
-      </Container>
+          </tbody>
+        </table>
+      )}
 
-     
+      <ToastContainer />
     </div>
   );
 };

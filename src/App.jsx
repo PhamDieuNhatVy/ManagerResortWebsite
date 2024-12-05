@@ -18,9 +18,11 @@ import RoomOrder from './components/RoomOrder';
 import FoodOrder from './components/FoodOrder';
 import TourOrder from './components/TourOrder';
 import AdminLayout from './components/admin/AdminLayout';
+import Profile from './components/Profile';
 import Review from './components/Review';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import OrderHistoryPage from './components/OrderHistory';
 import MainLayout from './components/MainLayout';  
 
 import './index.css';
@@ -40,7 +42,10 @@ function App() {
               <Route path="/register" element={<MainLayout><Register /></MainLayout>} />
               <Route path="/logout" element={<Logout />} />
               <Route path="/cart" element={<MainLayout><Cart /></MainLayout>} />
-              <Route path="/checkout" element={<CheckOut />} />
+              <Route path="/profile" element={<MainLayout><Profile /></MainLayout>} />
+              <Route path="/orderhistory" element={<MainLayout><OrderHistoryPage /></MainLayout>} />
+
+              <Route path="/checkout" element={<MainLayout><CheckOut /></MainLayout>}  />
               <Route path="/ordermanagement" element={<OrderManagement />} />
 
               {/* Admin Routes without Header and Footer */}
@@ -58,9 +63,9 @@ function App() {
               <Route path="/room" element={<Room />} />
               <Route path="/tour" element={<Tour />} />
               <Route path="/bookingform" element={<BookingForm />} />
-              <Route path="/room-order" element={<RoomOrder />} />
+              <Route path="/room-order" element={<MainLayout><RoomOrder /></MainLayout>} />
               <Route path="/food-order" element={<MainLayout><FoodOrder /></MainLayout>} />
-              <Route path="/tour-order" element={<TourOrder />} />
+              <Route path="/tour-order" element={<MainLayout><TourOrder /></MainLayout>} />
             </Routes>
           </div>
         </BrowserRouter>

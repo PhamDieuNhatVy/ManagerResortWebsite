@@ -28,15 +28,19 @@ export const register = async (username, email, password) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    // Xác định role dựa trên email
-    const role = email === 'admin@gmail.com' ? 'admin' : 'user';
-
-    // Lưu thông tin người dùng và role vào Firestore
-    await setDoc(doc(db, 'users', user.uid), {
+    // Mặc định role là 'user' và các trường khác là null
+    const defaultData = {
       username,
       email,
-      role,
-    });
+      role: 'user', 
+      cccd: null,   
+      address: null, 
+      age: null,     
+      phone: null,   
+    };
+
+    // Lưu thông tin người dùng vào Firestore
+    await setDoc(doc(db, 'users', user.uid), defaultData);
 
     return { success: true, data: user }; // Trả về thông tin người dùng
   } catch (error) {

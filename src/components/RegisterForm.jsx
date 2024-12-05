@@ -20,7 +20,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="m-10 flex items-center justify-center bg-gray-100">
+    <div className="p-10 flex items-center justify-center">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
         <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">Đăng ký</h2>
 
