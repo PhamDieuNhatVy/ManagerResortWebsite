@@ -121,7 +121,7 @@ const CheckoutPage = () => {
       }, {});
   };
 
-  // Function to handle deep link (payment status) after PayPal redirects back
+
   const handleDeepLink = async (url) => {
     const params = getQueryParams(url);
     const orderId = params.orderId;

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { db } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
-import { FaShoppingCart } from 'react-icons/fa'; // Import cart icon
+import { FaShoppingCart } from 'react-icons/fa';
 import Swiper from './layouts/Swiper';
 import Review from './Review';
 
@@ -49,7 +49,7 @@ const Home = () => {
   const handleAddToCart = (item) => {
     addToCart(item);
     setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000); // Hide after 3 seconds
+    setTimeout(() => setShowToast(false), 3000);
   };
 
   return (
@@ -64,9 +64,12 @@ const Home = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl px-4">
             {rooms.slice(0, 3).map((room) => (
               <div key={room.id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
-                <a href="#" className="block overflow-hidden">
-                  <img className="rounded-t-lg w-full h-64 object-cover transform transition duration-300 ease-in-out hover:scale-110" src={room.imageUrl || 'https://via.placeholder.com/300'} alt={room.name} />
-                </a>
+                <Link to={`/room/${room.id}`} className="block overflow-hidden">
+                  <img className="rounded-t-lg w-full h-64 object-cover transform transition duration-300 ease-in-out hover:scale-110" 
+                    src={room.imageUrl || 'https://via.placeholder.com/300'} 
+                    alt={room.name} 
+                  />
+                </Link>
                 <div className="px-5 py-4">
                   <h5 className="text-xl font-semibold text-gray-900">{room.name}</h5>
                   <div className="flex items-center justify-between mt-4">
@@ -90,9 +93,12 @@ const Home = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl px-4">
             {tours.slice(0, 3).map((tour) => (
               <div key={tour.id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
-                <a href="#" className="block overflow-hidden">
-                  <img className="rounded-t-lg w-full h-64 object-cover transform transition duration-300 ease-in-out hover:scale-110" src={tour.imageUrl || 'https://via.placeholder.com/300'} alt={tour.name} />
-                </a>
+                <Link to={`/tour/${tour.id}`} className="block overflow-hidden">
+                  <img className="rounded-t-lg w-full h-64 object-cover transform transition duration-300 ease-in-out hover:scale-110" 
+                    src={tour.imageUrl || 'https://via.placeholder.com/300'} 
+                    alt={tour.name} 
+                  />
+                </Link>
                 <div className="px-5 py-4">
                   <h5 className="text-xl font-semibold text-gray-900">{tour.name}</h5>
                   <div className="flex items-center justify-between mt-4">
@@ -116,9 +122,12 @@ const Home = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl px-4">
             {foods.slice(0, 3).map((food) => (
               <div key={food.id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
-                <a href="#" className="block overflow-hidden">
-                  <img className="rounded-t-lg w-full h-64 object-cover transform transition duration-300 ease-in-out hover:scale-110" src={food.imageUrl || 'https://via.placeholder.com/300'} alt={food.name} />
-                </a>
+                <Link to={`/food/${food.id}`} className="block overflow-hidden">
+                  <img className="rounded-t-lg w-full h-64 object-cover transform transition duration-300 ease-in-out hover:scale-110" 
+                    src={food.imageUrl || 'https://via.placeholder.com/300'} 
+                    alt={food.name} 
+                  />
+                </Link>
                 <div className="px-5 py-4">
                   <h5 className="text-xl font-semibold text-gray-900">{food.name}</h5>
                   <div className="flex items-center justify-between mt-4">
@@ -152,9 +161,6 @@ const Home = () => {
         )}
 
       </main>
-   
-
- 
     </div>
   );
 };

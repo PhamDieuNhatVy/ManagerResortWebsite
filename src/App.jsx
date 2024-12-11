@@ -24,10 +24,12 @@ import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import OrderHistoryPage from './components/OrderHistory';
 import MainLayout from './components/MainLayout';  
-import DetailPage from './components/DetailPage';
+import ProductDetail from './components/ProductDetail';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import UserManagement from './components/UserManagement';
-
+import RoomDetail from './components/RoomDetail';
+import TourDetail from './components/TourDetail';
+import FoodDetail from './components/FoodDetail';
 import './index.css';
 
 function App() {
@@ -57,8 +59,10 @@ function App() {
                   </PayPalScriptProvider>
                 } 
               />
+        <Route path="/room/:id" element={<MainLayout><RoomDetail /></MainLayout>} />
+        <Route path="/tour/:id" element={<MainLayout><TourDetail /></MainLayout>} />
+        <Route path="/food/:id" element={<MainLayout><FoodDetail /></MainLayout>} />
 
-              <Route path="/detail/:id" element={<MainLayout><DetailPage /></MainLayout>} />
 
               <Route path="/ordermanagement" element={<OrderManagement />} />
 
