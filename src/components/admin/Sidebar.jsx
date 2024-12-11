@@ -5,7 +5,8 @@ import {
   FaUtensils,
   FaBed,
   FaShoppingCart,
-  FaStar
+  FaStar,
+  FaUser
 } from 'react-icons/fa';
 import logo from '../../assets/LogowebsiteMrsHangFarm.png';
 
@@ -19,6 +20,7 @@ const Sidebar = ({ children }) => {
     '/admin/room': 'Room',
     '/admin/tour': 'Tour',
     '/admin/orders': 'Orders',
+    '/admin/users': 'Orders',
 
   };
 
@@ -30,6 +32,8 @@ const Sidebar = ({ children }) => {
     { path: '/admin/room', name: 'Quản lý phòng', icon: <FaBed /> },
     { path: '/admin/tour', name: 'Quản lý Tour', icon: <FaBed /> },
     { path: '/admin/orders', name: 'Quản lý đơn đặt hàng', icon: <FaShoppingCart /> },
+    { path: '/admin/users', name: 'Quản lý người dùng', icon: <FaUser /> },
+
 
   ];
 

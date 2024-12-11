@@ -24,6 +24,9 @@ import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import OrderHistoryPage from './components/OrderHistory';
 import MainLayout from './components/MainLayout';  
+import DetailPage from './components/DetailPage';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import UserManagement from './components/UserManagement';
 
 import './index.css';
 
@@ -45,7 +48,18 @@ function App() {
               <Route path="/profile" element={<MainLayout><Profile /></MainLayout>} />
               <Route path="/orderhistory" element={<MainLayout><OrderHistoryPage /></MainLayout>} />
 
-              <Route path="/checkout" element={<MainLayout><CheckOut /></MainLayout>}  />
+              {/* PayPalScriptProvider Wrap for Checkout */}
+              <Route 
+                path="/checkout" 
+                element={
+                  <PayPalScriptProvider options={{ "client-id": "Ad9vLq74WzUvfDdIAEBZjCSfHR2QUjAQAqqnGDZPupFDC7zWAFBU55RqQoYRpxsRGoig7VsbvsGN8s1b", "currency": "USD" }}>
+                    <MainLayout><CheckOut /></MainLayout>
+                  </PayPalScriptProvider>
+                } 
+              />
+
+              <Route path="/detail/:id" element={<MainLayout><DetailPage /></MainLayout>} />
+
               <Route path="/ordermanagement" element={<OrderManagement />} />
 
               {/* Admin Routes without Header and Footer */}
@@ -55,6 +69,7 @@ function App() {
                 <Route path="room" element={<Room />} />
                 <Route path="tour" element={<Tour />} />
                 <Route path="orders" element={<OrderManagement />} />
+                <Route path="users" element={<UserManagement />} />
                 <Route path="reviews" element={<Review />} />
               </Route>
 

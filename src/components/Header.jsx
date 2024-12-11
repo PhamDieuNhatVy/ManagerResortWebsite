@@ -1,15 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaShoppingCart } from 'react-icons/fa';
+import { FaShoppingCart, FaSearch } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
-import { useCart } from '../context/CartContext'; // Import useCart from CartContext
+import { useCart } from '../context/CartContext';
 import logo from '../assets/LogowebsiteMrsHangFarm.png';
+import Modal from 'react-modal';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../firebase';
 
 const Header = () => {
   const { user } = useAuth();
-  const { cart } = useCart(); // Get the cart state from context
+  const { cart } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAvatarMenuOpen, setIsAvatarMenuOpen] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const avatarMenuRef = useRef(null);
   const navigate = useNavigate();
 
@@ -18,12 +25,16 @@ const Header = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (avatarMenuRef.current && !avatarMenuRef.current.contains(event.target)) {
-        setIsAvatarMenuOpen(false);
+      // Check if the click is outside the modal overlay or modal content
+      if (
+        event.target.classList.contains('ReactModal__Overlay') ||
+        event.target.classList.contains('close-button')
+      ) {
+        setIsSearchModalOpen(false);
       }
     };
 
-    if (isAvatarMenuOpen) {
+    if (isSearchModalOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     } else {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -32,7 +43,7 @@ const Header = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isAvatarMenuOpen]);
+  }, [isSearchModalOpen]);
 
   const handleGoToCart = () => {
     navigate('/cart');
@@ -42,8 +53,48 @@ const Header = () => {
     setIsAvatarMenuOpen((prev) => !prev);
   };
 
+  const openSearchModal = () => {
+    setIsSearchModalOpen(true);
+  };
+
+  const closeSearchModal = () => {
+    setIsSearchModalOpen(false);
+    setSearchQuery('');
+    setSearchResults([]);
+  };
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+
+    const searchQueryNormalized = searchQuery.trim().toLowerCase();
+
+    const searchCollections = async (collectionName) => {
+      const q = collection(db, collectionName);
+      const querySnapshot = await getDocs(q);
+      return querySnapshot.docs
+        .map((doc) => ({ ...doc.data(), id: doc.id }))
+        .filter((item) =>
+          item.name.toLowerCase().includes(searchQueryNormalized)
+        );
+    };
+
+    let results = [];
+
+    // Filter based on selected category
+    if (selectedCategory === 'all') {
+      const foodsResults = await searchCollections('foods');
+      const roomsResults = await searchCollections('rooms');
+      const toursResults = await searchCollections('tours');
+      results = [...foodsResults, ...roomsResults, ...toursResults];
+    } else {
+      results = await searchCollections(selectedCategory);
+    }
+
+    setSearchResults(results);
+  };
+
   return (
-    <nav className="bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700 sticky top-0 z-50">
+    <nav className="bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700 sticky top-0 z-10">
       <div className="max-w-screen-xl flex justify-between items-center mx-auto p-4">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-3">
@@ -57,9 +108,14 @@ const Header = () => {
           <Link to="/room-order" className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-500">Phòng nghỉ</Link>
           <Link to="/food-order" className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-500">Món ăn</Link>
           <Link to="/tour-order" className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-500">Tour tham quan</Link>
-         
           <Link to="/about" className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-500">Giới thiệu</Link>
           <Link to="/contact" className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-500">Liên hệ</Link>
+          <button
+            onClick={openSearchModal}
+            className=""
+          >
+            <FaSearch />
+          </button>
         </div>
 
         {/* Cart and User */}
@@ -69,8 +125,11 @@ const Header = () => {
             className="bg-green-500 text-white py-2 px-3 rounded-md hover:bg-green-600 flex items-center"
           >
             <FaShoppingCart className="mr-2" />
-            ({totalItems}) {/* Show total quantity */}
+            ({totalItems})
           </button>
+
+          {/* Search Button */}
+
 
           {user ? (
             <div className="relative">
@@ -115,6 +174,68 @@ const Header = () => {
           )}
         </div>
       </div>
+
+      {/* Search Modal */}
+      <Modal
+        isOpen={isSearchModalOpen}
+        onRequestClose={closeSearchModal}
+        contentLabel="Search Modal"
+        className="fixed inset-0 flex items-center justify-center z-50"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-40"
+        shouldCloseOnOverlayClick={true}
+      >
+        <div className="bg-white rounded-lg p-4 w-full max-w-2xl z-50">
+          <h3 className="text-xl mb-2">Tìm kiếm</h3>
+          <form onSubmit={handleSearch}>
+            <div className="flex items-center space-x-2 mb-2">
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="p-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="all">Các Dịch vụ</option>
+                <option value="foods">Món ăn</option>
+                <option value="rooms">Phòng nghỉ</option>
+                <option value="tours">Tour du Lịch</option>
+              </select>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full p-2.5 border border-gray-300 focus:outline-none focus:ring-2 rounded-md"
+                placeholder="Nhập từ khóa tìm kiếm..."
+              />
+              <button type="submit" className="p-3 bg-blue-500 text-white border-none rounded-md">
+                <FaSearch />
+              </button>
+            </div>
+          </form>
+
+          {searchResults.length > 0 && (
+            <ul className="mt-4">
+            {searchResults.map((result) => (
+  <li key={result.id} className="border-b border-gray-200 py-2">
+    <Link
+      to={`/detail/${result.id}`}
+      className="text-black hover:text-blue-700"
+    >
+      {result.name}
+    </Link>
+  </li>
+))}
+
+
+            </ul>
+          )}
+          <hr />
+          <button
+            onClick={closeSearchModal}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded float-end mt-2"
+          >
+            Đóng
+          </button>
+        </div>
+      </Modal>
     </nav>
   );
 };

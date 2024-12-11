@@ -75,8 +75,6 @@ const OrderManagementPage = () => {
                 <td className="px-4 py-4 text-sm text-gray-900">{order.username}</td>
                 <td className="px-4 py-4 text-sm text-gray-900">{order.address}</td>
                 <td className="px-4 py-4 text-sm text-gray-900">{order.totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</td>
-
-                
                 <td className="px-4 py-4 text-sm text-gray-900">{order.status}</td>
                 <td className="px-4 py-4 text-sm text-gray-900">
                   {/* Thay đổi trạng thái đơn hàng */}
@@ -85,10 +83,10 @@ const OrderManagementPage = () => {
                     value={order.status}
                     onChange={(e) => handleStatusChange(order.id, e.target.value)}
                   >
-                    <option value="Pending">Chờ xử lý</option>
-                    <option value="Shipped">Đang giao</option>
-                    <option value="Delivered">Đã giao</option>
-                    <option value="Cancelled">Đã hủy</option>
+                    <option value="pending">Chưa thanh toán</option>
+                    <option value="payment">Đã thanh toán</option>
+                    <option value="delivered">Đã giao</option>
+                    <option value="cancelled">Đã hủy</option>
                   </select>
                 </td>
               </tr>

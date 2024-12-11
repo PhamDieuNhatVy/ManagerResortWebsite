@@ -54,7 +54,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Swiper />
+      <Swiper className="z-1"/>
       <main className="flex flex-col items-center justify-center h-full py-20">
         <h1 className="text-5xl font-bold mb-10 text-gray-900">Chào mừng đến với Resort Mrs. Hang</h1>
 
