@@ -42,7 +42,6 @@ const LoginForm = () => {
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
         <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">Đăng nhập</h2>
 
-  
         {errorMessage && (
           <div className="bg-red-500 text-white p-3 rounded mb-4">
             {errorMessage}

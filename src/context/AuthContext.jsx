@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect, useContext } from 'react';
-import { auth, db } from '../firebase'; // Firebase configuration
+import { auth, db } from '../firebase';
 import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
-import { getDoc, doc } from 'firebase/firestore';
+import { getDoc, doc, updateDoc } from 'firebase/firestore';
 
 const AuthContext = createContext();
 
@@ -12,13 +12,12 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        // Get user data from Firestore
         const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
         if (userDoc.exists()) {
           const userData = {
             uid: firebaseUser.uid,
             email: firebaseUser.email,
-            role: userDoc.data().role || 'user', // Default 'user' role if not found
+            role: userDoc.data().role || 'user',
             username: userDoc.data().username || '',
             cccd: userDoc.data().cccd || '',
             address: userDoc.data().address || '',
@@ -27,7 +26,7 @@ export const AuthProvider = ({ children }) => {
           };
           setUser(userData);
         } else {
-          setUser(null); // If no user data found in Firestore
+          setUser(null);
         }
       } else {
         setUser(null);
@@ -43,13 +42,12 @@ export const AuthProvider = ({ children }) => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const firebaseUser = userCredential.user;
 
-      // Get user data from Firestore
       const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
       if (userDoc.exists()) {
         const userData = {
           uid: firebaseUser.uid,
           email: firebaseUser.email,
-          role: userDoc.data().role || 'user', // Default 'user' role if not found
+          role: userDoc.data().role || 'user',
           username: userDoc.data().username || '',
           cccd: userDoc.data().cccd || '',
           address: userDoc.data().address || '',
@@ -57,18 +55,36 @@ export const AuthProvider = ({ children }) => {
           phone: userDoc.data().phone || '',
         };
         setUser(userData);
-        return userData; // Return user data, including role
+        return userData;
       } else {
         throw new Error('User data not found.');
       }
     } catch (error) {
       console.error('Login error:', error.message);
-      throw error; // Rethrow error to be handled in components
+      throw error;
+    }
+  };
+
+  const updateUser = async (updatedData) => {
+    try {
+      if (user) {
+        const userRef = doc(db, 'users', user.uid);
+        await updateDoc(userRef, updatedData);
+        setUser((prevUser) => ({
+          ...prevUser,
+          ...updatedData,
+        }));
+      } else {
+        throw new Error('User is not authenticated.');
+      }
+    } catch (error) {
+      console.error('Error updating user:', error.message);
+      throw error;
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, setUser, login }}>
+    <AuthContext.Provider value={{ user, loading, setUser, login, updateUser }}>
       {!loading && children}
     </AuthContext.Provider>
   );

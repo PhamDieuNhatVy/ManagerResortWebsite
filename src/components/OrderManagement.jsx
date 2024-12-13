@@ -4,7 +4,7 @@ import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
 import { ToastContainer, toast } from 'react-toastify'; // Để hiển thị thông báo
 import 'jspdf-autotable';  // Import autoTable
 import html2pdf from 'html2pdf.js';
-
+import axios from 'axios'; // Import Axios
 const OrderManagementPage = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -126,13 +126,30 @@ const OrderManagementPage = () => {
       .save(`Hoa don Mrs.HangFarm.pdf`);
   };
 
-  // Gửi hóa đơn qua email (giả lập)
-  const handleSendInvoice = (order) => {
-    // Giả lập gửi email
-    toast.success('Hóa đơn đã được gửi qua email!');
-    console.log(`Gửi email cho ${order.username} với hóa đơn ID: ${order.id}`);
+  const handleSendInvoice = async (order) => {
+    try {
+      const response = await axios.post('/api', {
+        recipient: order.email, 
+        subject: 'Phản hồi từ hệ thống',
+        html: `
+          <p>ID đơn hàng: ${order.id}</p>
+          <p>Tên khách hàng: ${order.username}</p>
+          <p>Địa chỉ: ${order.address}</p>
+          <p>Tổng giá: ${order.totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</p>
+        `,
+      });
+  
+      if (response.status === 200) {
+        toast.success('Hóa đơn đã được gửi qua email!');
+      } else {
+        toast.error('Không thể gửi hóa đơn qua email.');
+      }
+    } catch (error) {
+      console.error('Lỗi khi gửi email:', error);
+      toast.error('Không thể gửi hóa đơn qua email.');
+    }
   };
-
+  
   if (loading) {
     return <div className="text-center">Đang tải...</div>;
   }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link} from 'react-router-dom';
 import { useCart } from '../context/CartContext'; // Import useCart from CartContext
 import { db } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
@@ -65,9 +65,12 @@ const FoodOrder = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl px-4">
             {foods.map((food) => (
               <div key={food.id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg">
-                <a href="#">
-                  <img className="rounded-t-lg w-full h-64 object-cover" src={food.imageUrl || 'https://via.placeholder.com/300'} alt={food.name} />
-                </a>
+               <Link to={`/food/${food.id}`} className="block overflow-hidden">
+                                 <img className="rounded-t-lg w-full h-64 object-cover transform transition duration-300 ease-in-out hover:scale-110" 
+                                   src={food.imageUrl || 'https://via.placeholder.com/300'} 
+                                   alt={food.name} 
+                                 />
+                               </Link>
                 <div className="px-5 py-4">
                   <h5 className="text-xl font-semibold text-gray-900">{food.name}</h5>
                   <p className="text-gray-700 text-base mt-2">{food.description}</p>
