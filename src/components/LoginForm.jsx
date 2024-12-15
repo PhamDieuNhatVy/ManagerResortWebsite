@@ -1,29 +1,31 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // Import useAuth
+import Modal from 'react-modal';
+import { useAuth } from '../context/AuthContext';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetMessage, setResetMessage] = useState('');
   const navigate = useNavigate();
-  const { login } = useAuth(); // Lấy hàm login từ context
+  const { login, resetPassword } = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setErrorMessage(''); // Clear previous error message
+    setErrorMessage('');
 
     try {
-      const userData = await login(email, password); // Gọi hàm login từ context
+      const userData = await login(email, password);
 
-      // Điều hướng dựa trên vai trò
       if (userData.role === 'admin') {
-        navigate('/admin'); // Điều hướng đến trang admin
+        navigate('/admin');
       } else {
-        navigate('/'); // Điều hướng đến trang chính cho user thông thường
+        navigate('/');
       }
     } catch (error) {
-      // Xử lý các lỗi khi đăng nhập
       if (error.code === 'auth/invalid-email') {
         setErrorMessage('Email không hợp lệ.');
       } else if (error.code === 'auth/user-not-found') {
@@ -35,6 +37,28 @@ const LoginForm = () => {
       }
       console.error('Đăng nhập thất bại:', error);
     }
+  };
+
+  const handleResetPassword = async (event) => {
+    event.preventDefault();
+    setResetMessage('');
+    try {
+      await resetPassword(resetEmail);
+      setResetMessage('Một email đặt lại mật khẩu đã được gửi.');
+    } catch (error) {
+      setResetMessage('Không thể gửi email đặt lại mật khẩu. Vui lòng thử lại.');
+      console.error('Lỗi đặt lại mật khẩu:', error);
+    }
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setResetMessage('');
+    setResetEmail('');
   };
 
   return (
@@ -93,8 +117,57 @@ const LoginForm = () => {
           <Link to="/register" className="text-blue-500 hover:text-blue-700 text-sm">
             Bạn chưa có tài khoản? Đăng ký
           </Link>
+          <button onClick={openModal} className="text-blue-500 hover:text-blue-700 text-sm ml-4">
+            Quên mật khẩu?
+          </button>
         </div>
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Reset Password"
+        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 "
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+      >
+        <div className="bg-white p-5 rounded-lg shadow-lg w-full max-w-md z-50">
+          <h2 className="text-xl font-semibold mb-2 text-center">Đặt lại mật khẩu</h2>
+          {resetMessage && (
+            <div className="bg-blue-500 text-white p-3 rounded mb-4">
+              {resetMessage}
+            </div>
+          )}
+          <form onSubmit={handleResetPassword}>
+            <div className="mb-4 ">
+              <label htmlFor="resetEmail" className="block text-sm font-medium text-gray-600 ">
+                Email
+              </label>
+              <input
+                id="resetEmail"
+                type="email"
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Nhập email để đặt lại mật khẩu"
+              />
+            </div>
+            <div className='flex justify-between'>
+            <button
+              type="submit"
+              className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              Gửi yêu cầu
+            </button>
+            <button onClick={closeModal}  className="ml-2 w-full py-2 px-4 bg-red text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Đóng
+          </button>
+            </div>
+           
+          </form>
+          
+        </div>
+      </Modal>
     </div>
   );
 };

@@ -60,9 +60,9 @@ const Home = () => {
 
         {/* Rooms Section */}
         <div className="mb-12">
-          <h2 className="text-3xl font-semibold mb-4 text-gray-800">Phòng sang trọng</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl px-4">
-            {rooms.slice(0, 3).map((room) => (
+          <h2 className="text-3xl font-semibold mb-4 text-gray-800 text-center">Phòng sang trọng</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-7xl px-4">
+            {rooms.slice(0, 4).map((room) => (
               <div key={room.id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
                 <Link to={`/room/${room.id}`} className="block overflow-hidden">
                   <img className="rounded-t-lg w-full h-64 object-cover transform transition duration-300 ease-in-out hover:scale-110" 
@@ -83,15 +83,15 @@ const Home = () => {
             ))}
           </div>
           <div className="text-center mt-6">
-            <Link to="/room-order" className="bg-blue-700 text-white py-2 px-6 rounded-md hover:bg-blue-800 transition-colors">Xem tất cả phòng</Link>
+            <Link to="/room-order" className="bg-blue-700 text-white py-2 px-4 rounded-md hover:bg-blue-800 transition-colors">Xem tất cả phòng</Link>
           </div>
         </div>
 
         {/* Tours Section */}
         <div className="mb-12">
-          <h2 className="text-3xl font-semibold mb-4 text-gray-800">Chuyến tham quan hấp dẫn</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl px-4">
-            {tours.slice(0, 3).map((tour) => (
+          <h2 className="text-3xl font-semibold mb-4 text-gray-800 text-center">Chuyến tham quan hấp dẫn</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-7xl px-4">
+            {tours.slice(0, 4).map((tour) => (
               <div key={tour.id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
                 <Link to={`/tour/${tour.id}`} className="block overflow-hidden">
                   <img className="rounded-t-lg w-full h-64 object-cover transform transition duration-300 ease-in-out hover:scale-110" 
@@ -112,18 +112,18 @@ const Home = () => {
             ))}
           </div>
           <div className="text-center mt-6">
-            <Link to="/tour-order" className="bg-blue-700 text-white py-2 px-6 rounded-md hover:bg-blue-800 transition-colors">Xem tất cả chuyến tham quan</Link>
+            <Link to="/tour-order" className="bg-blue-700 text-white py-2 px-4 rounded-md hover:bg-blue-800 transition-colors">Xem tất cả chuyến tham quan</Link>
           </div>
         </div>
 
         {/* Foods Section */}
         <div className="mb-12">
-          <h2 className="text-3xl font-semibold mb-4 text-gray-800">Món ăn ngon</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl px-4">
-            {foods.slice(0, 3).map((food) => (
+          <h2 className="text-3xl font-semibold mb-4 text-gray-800 text-center">Món ăn ngon</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-7xl px-4">
+            {foods.slice(0, 4).map((food) => (
               <div key={food.id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
                 <Link to={`/food/${food.id}`} className="block overflow-hidden">
-                  <img className="rounded-t-lg w-full h-64 object-cover transform transition duration-300 ease-in-out hover:scale-110" 
+                  <img className="rounded-t-lg w-full h-64 object-cover transform transition duration-300 ease-in-out hover:scale-110 rounded-lg" 
                     src={food.imageUrl || 'https://via.placeholder.com/300'} 
                     alt={food.name} 
                   />
@@ -141,7 +141,7 @@ const Home = () => {
             ))}
           </div>
           <div className="text-center mt-6">
-            <Link to="/food-order" className="bg-blue-700 text-white py-2 px-6 rounded-md hover:bg-blue-800 transition-colors">Xem tất cả món ăn</Link>
+            <Link to="/food-order" className="bg-blue-700 text-white py-2 px-4 rounded-md hover:bg-blue-800 transition-colors">Xem tất cả món ăn</Link>
           </div>
         </div>
 

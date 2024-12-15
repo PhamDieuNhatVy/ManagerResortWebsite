@@ -13,7 +13,8 @@ import Food from './components/services/Food';
 import Room from './components/services/Room';
 import Tour from './components/services/Tour';
 import BookingForm from './components/services/BookingForm';
-import AdminPage from './components/admin/AdminPage';
+
+import AdminPage from './components/Admin';
 import RoomOrder from './components/RoomOrder';
 import FoodOrder from './components/FoodOrder';
 import TourOrder from './components/TourOrder';

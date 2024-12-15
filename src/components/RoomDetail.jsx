@@ -3,17 +3,19 @@ import { useParams } from 'react-router-dom';
 import { db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import CommentSection from './CommentSection'; // Import component CommentSection
+import { useCart } from '../context/CartContext';
 
 const RoomDetail = () => {
   const { id } = useParams();
   const [room, setRoom] = React.useState(null);
+  const { addToCart } = useCart(); 
 
   React.useEffect(() => {
     const fetchRoom = async () => {
       const docRef = doc(db, 'rooms', id);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        setRoom(docSnap.data());
+        setRoom({ id: docSnap.id, ...docSnap.data() });
       } else {
         console.log('No such document!');
       }
@@ -23,10 +25,15 @@ const RoomDetail = () => {
   }, [id]);
 
   if (!room) return <div className="text-center text-gray-500">Loading...</div>;
-  const handleAddToCart = (item) => {
-    addToCart(item);
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
+
+  const handleAddToCart = () => {
+    addToCart({
+      id: room.id,
+      name: room.name,
+      description: room.description,
+      price: room.price,
+      imageUrl: room.imageUrl || 'https://via.placeholder.com/400', // Default image if no imageUrl is provided
+    });
   };
 
   return (

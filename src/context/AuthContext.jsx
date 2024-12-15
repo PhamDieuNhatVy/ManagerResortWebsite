@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import { auth, db } from '../firebase';
-import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
+import { onAuthStateChanged, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { getDoc, doc, updateDoc } from 'firebase/firestore';
 
 const AuthContext = createContext();
@@ -83,8 +83,17 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const resetPassword = async (email) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+    } catch (error) {
+      console.error('Error sending password reset email:', error.message);
+      throw error;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, setUser, login, updateUser }}>
+    <AuthContext.Provider value={{ user, loading, setUser, login, updateUser, resetPassword }}>
       {!loading && children}
     </AuthContext.Provider>
   );

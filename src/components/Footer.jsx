@@ -25,48 +25,48 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-white text-gray-700 pt-4">
+    <footer className="bg-white text-gray-700 pt-1">
       <div className="container mx-auto px-10 justify-around">
         <div className="flex flex-wrap justify-around">
-          {/* Column 1: Company Info */}
+          {/* Cột 1: Thông tin công ty */}
           <div className="flex-1 px-4 mb-6 min-w-[200px]">
             <h5 className="text-xl font-bold mb-2">Mrs. Hang Farm</h5>
-            <p className="text-gray-600">Enjoy a relaxing stay at our beautiful hotel & resort.</p>
+            <p className="text-gray-600">Thưởng thức kỳ nghỉ thư giãn tại khách sạn và resort tuyệt đẹp của chúng tôi.</p>
           </div>
 
-          {/* Column 2: Quick Links */}
+          {/* Cột 2: Liên kết nhanh */}
           <div className="flex-1 px-4 mb-6 min-w-[200px]">
-            <h5 className="text-xl font-bold mb-2">Quick Links</h5>
+            <h5 className="text-xl font-bold mb-2">Liên kết nhanh</h5>
             <ul className="list-none space-y-2">
               <li>
-                <Link to="/" className="text-gray-600 hover:text-gray-900">Home</Link>
+                <Link to="/" className="text-gray-600 hover:text-gray-900">Trang chủ</Link>
               </li>
               <li>
-                <Link to="/about" className="text-gray-600 hover:text-gray-900">About Us</Link>
+                <Link to="/about" className="text-gray-600 hover:text-gray-900">Giới thiệu</Link>
               </li>
               <li>
-                <Link to="/rooms" className="text-gray-600 hover:text-gray-900">Rooms</Link>
+                <Link to="/room-order" className="text-gray-600 hover:text-gray-900">Phòng nghỉ</Link>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-600 hover:text-gray-900">Contact</Link>
+                <Link to="/contact" className="text-gray-600 hover:text-gray-900">Liên hệ</Link>
               </li>
             </ul>
           </div>
 
-          {/* Column 3: Services */}
+          {/* Cột 3: Dịch vụ */}
           <div className="flex-1 px-4 mb-6 min-w-[200px]">
-            <h5 className="text-xl font-bold mb-2">Our Services</h5>
+            <h5 className="text-xl font-bold mb-2">Dịch vụ</h5>
             <ul className="list-none space-y-2">
-              <li className="text-gray-600">Free Wi-Fi</li>
-              <li className="text-gray-600">24/7 Room Service</li>
-              <li className="text-gray-600">Airport Pickup</li>
-              <li className="text-gray-600">Swimming Pool</li>
+              <li className="text-gray-600">Wi-Fi miễn phí</li>
+              <li className="text-gray-600">Dịch vụ phòng 24/7</li>
+              <li className="text-gray-600">Đưa đón sân bay</li>
+              <li className="text-gray-600">Hồ bơi</li>
             </ul>
           </div>
 
-          {/* Column 4: Social Media */}
+          {/* Cột 4: Mạng xã hội */}
           <div className="flex-1 px-4 mb-6 min-w-[200px]">
-            <h5 className="text-xl font-bold mb-2">Follow Us</h5>
+            <h5 className="text-xl font-bold mb-2">Theo dõi chúng tôi</h5>
             <ul className="list-none space-y-2">
               <li>
                 <a href="https://facebook.com" className="text-gray-600 hover:text-gray-900 flex items-center">
@@ -93,7 +93,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="text-center bg-black p-4">
-        <p className="text-white">© 2024 Mrs. Hang Farm. All rights reserved.</p>
+        <p className="text-white">© 2024 - Mrs. Hang Farm.</p>
       </div>
       {showTopButton && (
         <button 

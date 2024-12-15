@@ -98,12 +98,23 @@ const Header = () => {
           <span className="self-center text-2xl font-semibold text-gray-900 dark:text-white">Mrs. Hang Farm</span>
         </Link>
         <div className="hidden md:flex space-x-8">
-          <Link to="/" className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-500">Trang chủ</Link>
-          <Link to="/room-order" className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-500">Phòng nghỉ</Link>
-          <Link to="/food-order" className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-500">Món ăn</Link>
-          <Link to="/tour-order" className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-500">Tour tham quan</Link>
-          <Link to="/about" className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-500">Giới thiệu</Link>
-          <Link to="/contact" className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-500">Liên hệ</Link>
+          <Link to="/" className="text-base text-gray-900 dark:text-white hover:text-blue dark:hover:text-blue-500">
+            Trang chủ
+          </Link>
+          <Link to="/room-order" className="text-base text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-500">
+            Phòng nghỉ
+          </Link>
+          <Link to="/food-order" className="text-base text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-500">
+            Món ăn
+          </Link>
+          <Link to="/tour-order" className="text-base text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-500">
+            Tour tham quan
+          </Link>
+          <Link to="/about" className="text-base text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-500">
+            Giới thiệu
+          </Link>
+
+
           <button onClick={openSearchModal}>
             <FaSearch />
           </button>
@@ -158,12 +169,12 @@ const Header = () => {
             <ul className="mt-4">
               {searchResults.map((result) => (
                 <li key={result.id} className="border-b border-gray-200 py-2">
-                <Link 
-        to={`/${result.category === 'foods' ? 'food' : result.category === 'rooms' ? 'room' : 'tour'}/${result.id}`} 
-        className="text-black hover:text-blue-700"
-      >
-        {result.name}
-      </Link>
+                  <Link
+                    to={`/${result.category === 'foods' ? 'food' : result.category === 'rooms' ? 'room' : 'tour'}/${result.id}`}
+                    className="text-black hover:text-blue-700"
+                  >
+                    {result.name}
+                  </Link>
                 </li>
               ))}
             </ul>

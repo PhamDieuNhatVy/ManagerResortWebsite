@@ -38,21 +38,21 @@ const Sidebar = ({ children }) => {
   ];
 
   return (
-    <div className="flex h-screen">
+    <div className="flex ">
       {/* Sidebar */}
       <div
         style={{ width: '300px' }}
-        className="sidebar bg-white text-black p-3 transition-all duration-300 ease-in-out shadow-md"
+        className="sidebar text-black transition-all duration-300 ease-in-out min-h-full "
       >
         {/* Logo */}
-        <div className="logo flex items-center mb-4">
+        <div className="logo flex items-center mb-4 mt-4 ml-3">
           <img
-            style={{ width: '50px' }}
+            style={{ width: '80px',  }}
             src={logo}
             alt="Logo"
           />
-          <h1 className='font-bold p-1.5'>Mrs. Hang Farm</h1>
-        </div>
+          <h1 className='font-bold p-1.5 text-xl'>Mrs. Hang Farm</h1>
+        </div>  
 
         {/* Menu */}
         <div className="menu">
@@ -60,11 +60,11 @@ const Sidebar = ({ children }) => {
             <Link
               to={item.path}
               key={index}
-              className={`flex items-center py-3 px-4 mb-3 text-lg ${
+              className={`flex items-center py-4 px-4 mb-2 text-lg ${
                 location.pathname === item.path
-                  ? 'bg-blue-500 text-white rounded-md'
-                  : 'hover:bg-blue-500 hover:text-white rounded-md'
-              }`}
+                  ? 'bg-blue-700 text-white'
+                  : 'hover:bg-blue-700 hover:text-white'
+              }`} 
             >
               <div className="icon mr-3">{item.icon}</div>
               <div className="text-sm">{item.name}</div>
@@ -83,7 +83,7 @@ const Sidebar = ({ children }) => {
         </header> */}
 
         {/* Main content */}
-        <main className="flex-1 p-4 overflow-auto">{children}</main>
+        <main className="flex-1 p-1">{children}</main>
       </div>
     </div>
   );

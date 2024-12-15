@@ -63,7 +63,7 @@ const CheckoutPage = () => {
       );
 
       const approvalUrl = paymentResponse.data.links.find((link) => link.rel === 'approval_url').href;
-      toast.success('Thanh toán thành công, chuyển hướng đến PayPal...');
+      toast.success('Đang chuyển hướng đến PayPal...');
       window.location.href = approvalUrl;
     } catch (error) {
       console.error('Error initiating payment:', error);

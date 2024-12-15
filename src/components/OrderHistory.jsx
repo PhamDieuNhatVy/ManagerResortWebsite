@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { db } from '../firebase'; 
 import { collection, query, where, getDocs, updateDoc, doc, deleteDoc } from 'firebase/firestore';
@@ -14,7 +14,7 @@ const OrderHistoryPage = () => {
   const navigate = useNavigate();
   const { clearCart } = useCart(); 
   const [orderStatus, setOrderStatus] = useState(null);
-  const [processedOrders, setProcessedOrders] = useState({}); // Track processed orders to avoid duplicate notifications
+  const notificationShownRef = useRef(false); // Track whether notification has been shown
 
   const getQueryParams = () => {
     const params = new URLSearchParams(location.search);
@@ -53,9 +53,11 @@ const OrderHistoryPage = () => {
     };
 
     fetchOrders();
+  }, [user, location]);
 
+  useEffect(() => {
     const { orderId, paymentId, token, payerID } = getQueryParams();
-    if (orderId && paymentId && token && payerID && !processedOrders[orderId]) {
+    if (orderId && paymentId && token && payerID && !notificationShownRef.current) {
       const updateOrderStatus = async () => {
         try {
           const orderDocRef = doc(db, 'orders', orderId);
@@ -68,11 +70,11 @@ const OrderHistoryPage = () => {
 
           await clearCart();
 
-          toast.success('Đơn hàng đã được thanh toán!');
+          // toast.success('Đơn hàng đã được thanh toán!');
           setOrderStatus('payment');
           
-          // Mark this order as processed
-          setProcessedOrders(prev => ({ ...prev, [orderId]: true }));
+          // Mark the notification as shown
+          notificationShownRef.current = true;
 
         } catch (error) {
           console.error('Error updating order:', error);
@@ -82,7 +84,7 @@ const OrderHistoryPage = () => {
 
       updateOrderStatus();
     }
-  }, [user, location, clearCart, processedOrders]); // Adding processedOrders to dependencies to handle the condition
+  }, [location, clearCart]);
 
   const groupOrdersByProduct = (orders) => {
     const grouped = [];
