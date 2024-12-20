@@ -11,13 +11,13 @@ const About = () => {
           Giới thiệu về Mrs. Hang Farm
         </h2>
         <p className="text-lg text-gray-700 leading-relaxed">
-          Mrs. Hang Farm là một farmstay độc đáo, nơi bạn không chỉ tận hưởng không gian yên bình giữa thiên nhiên mà còn được trải nghiệm những sản phẩm nông sản chất lượng cao. Chúng tôi tự hào cung cấp thực phẩm tươi ngon, giàu dinh dưỡng, giúp nâng cao sức khỏe cho cộng đồng. Với cam kết sử dụng các phương pháp canh tác bền vững và thân thiện với môi trường, MRS. Farm mang đến cho bạn không chỉ là những sản phẩm tốt nhất mà còn là một lối sống xanh và bền vững.
+          Mrs. Hang Farm là một farmstay độc đáo, nơi bạn không chỉ tận hưởng không gian yên bình giữa thiên nhiên mà còn được trải nghiệm những sản phẩm nông sản chất lượng cao. Chúng tôi tự hào cung cấp thực phẩm tươi ngon, giàu dinh dưỡng, giúp nâng cao sức khỏe cho cộng đồng. Với cam kết sử dụng các phương pháp canh tác bền vững và thân thiện với môi trường, Mrs. Hang Farm mang đến cho bạn không chỉ là những sản phẩm tốt nhất mà còn là một lối sống xanh và bền vững.
         </p>
 
         {/* Additional Information */}
         <div className="space-y-2">
           <p className="text-lg text-gray-700">
-            <strong>Địa chỉ:</strong> Thủ Dầu Một, Bình Dương
+            <strong>Địa chỉ:</strong> Bắc Tân Uyên, Bình Dương
           </p>
           <p className="text-lg text-gray-700">
             <strong>Điện thoại:</strong> 0901234567
